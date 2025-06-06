@@ -1,1 +1,11 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=19676760&assignment_repo_type=AssignmentRepo)
+# Speech to workout logs
+
+## Group members
+ - Parminder Randhawa, Developer & Designer
+ - Nikolay Deineg, Developer & Designero 
+ - Ilian Khankhalaev, Developer & Researcher
+ - Sven Jensen, Developer & PM
+
+## Description
+### The Speech to workout logs web application allows gym goers to talk to their phones about their workout and let the application
+do the rest of the work. The application extracts the workout data and formats it for the user directly from an audio input. Leveraging modern LLM technology and Agentic Workflows.
