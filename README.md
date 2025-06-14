@@ -1,4 +1,7 @@
-# Speech to workout logs
+# Gym Whisper
+
+## M0 AI Disclosure forms are in the docs
+[The AI Disclosure forms are here](docs/)
 
 ## Group members
  - Parminder Randhawa, Developer & Designer
