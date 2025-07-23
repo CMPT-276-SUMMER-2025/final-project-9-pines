@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import { callLLMAPI } from '../components/llmAPI';
 
 
 const MicrophoneButton = () => {
@@ -29,23 +30,12 @@ const MicrophoneButton = () => {
             console.log(transcript)
             console.log("processing")
             setStatus('processing');
-            try {
-                // Use the correct path for Next.js app directory API routes
-                const response = await fetch('/api/llm', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ text: transcript })
-                });
-                const data = await response.json();
-                console.log("API Response:", data);
-                console.log(workoutData)
-                setWorkoutData(workoutData => [...workoutData, data.result]);
-                // You can display the result to the user here if desired
-            } catch (error) {
-                console.error("Error calling LLM API:", error);
+
+            const result = await callLLMAPI(transcript);
+            if (result) {
+                setWorkoutData(prev => [...prev, result]);
             }
+
             setStatus("idle")
         }
     };
