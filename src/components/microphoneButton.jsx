@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import { callGeminiAPI } from '../api/llm/gemini';
+import { callGeminiAPI } from '../llm/gemini';
 import 'material-icons/iconfont/material-icons.css';
 
 const MicrophoneButton = () => {
