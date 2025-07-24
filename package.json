@@ -2,17 +2,19 @@
   "name": "final-project-9-pines",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
   "dependencies": {
-    "@google/genai": "^1.10.0",
+    "@google/genai": "^1.11.0",
     "material-icons": "^1.13.14",
+    "node-fetch": "^3.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-scripts": "^5.0.1",

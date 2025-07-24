@@ -1,4 +1,4 @@
-module.exports = {
-  testEnvironment: 'jsdom',
-  moduleFileExtensions: ['js', 'jsx'],
+export default {
+  testEnvironment: "node",
+  // Optionally, add more config here
 };
