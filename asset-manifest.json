@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/final-project-9-pines/static/css/main.15caae42.css",
+    "main.js": "/final-project-9-pines/static/js/main.9daa34f2.js",
+    "static/media/material-icons-two-tone.woff": "/final-project-9-pines/static/media/material-icons-two-tone.3baa5b8f3469222b822d.woff",
+    "static/media/material-icons-two-tone.woff2": "/final-project-9-pines/static/media/material-icons-two-tone.4ef4218c522f1eb6b5b1.woff2",
+    "static/media/material-icons-round.woff": "/final-project-9-pines/static/media/material-icons-round.5d681e2edae8c60630db.woff",
+    "static/media/material-icons-outlined.woff": "/final-project-9-pines/static/media/material-icons-outlined.f882956fd323fd322f31.woff",
+    "static/media/material-icons-round.woff2": "/final-project-9-pines/static/media/material-icons-round.c380809fd3677d7d6903.woff2",
+    "static/media/material-icons.woff": "/final-project-9-pines/static/media/material-icons.4d73cb90e394b34b7670.woff",
+    "static/media/material-icons-sharp.woff": "/final-project-9-pines/static/media/material-icons-sharp.3a4004a46a653d4b2166.woff",
+    "static/media/material-icons-outlined.woff2": "/final-project-9-pines/static/media/material-icons-outlined.6f420cf17cc0d7676fad.woff2",
+    "static/media/material-icons-sharp.woff2": "/final-project-9-pines/static/media/material-icons-sharp.219aa9140e099e6c72ed.woff2",
+    "static/media/material-icons.woff2": "/final-project-9-pines/static/media/material-icons.0c35d18bf06992036b69.woff2",
+    "index.html": "/final-project-9-pines/index.html",
+    "main.15caae42.css.map": "/final-project-9-pines/static/css/main.15caae42.css.map",
+    "main.9daa34f2.js.map": "/final-project-9-pines/static/js/main.9daa34f2.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.15caae42.css",
+    "static/js/main.9daa34f2.js"
+  ]
+}
