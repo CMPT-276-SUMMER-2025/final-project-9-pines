@@ -74,7 +74,7 @@ const MicrophoneButton = () => {
     }
 
     return (
-        <div>
+        <div style={{marginTop:"15%"}}>
             <button
                 onClick={handleClick}
                 // Removed Tailwind className, replaced with style
