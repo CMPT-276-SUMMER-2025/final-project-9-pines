@@ -5,6 +5,7 @@ import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognitio
 import { callGeminiAPI } from '../llm/gemini'; // Keep your actual API import
 import "./App.css";
 import ToggleSwitch from "./ToggleSwitch";
+import Sidebar from "./Side-bar";
 
 
 
@@ -106,23 +107,13 @@ export default function App() {
 
   return (
     <div className="app">
-      {/* Sidebar */}
-      <aside className={`sidebar${menuOpen ? " open" : ""}`}>
-        <div className="sidebar-header">
-          <button onClick={() => setMenuOpen(false)} className="icon-btn" aria-label="Close menu">
-            <ArrowLeft size={24} />
-          </button>
-          <h2>Menu</h2>
-        </div>
-        <nav className="sidebar-nav">
-          <button className="nav-link" onClick={() => window.open("#", "_self")}>Tutorials</button>
-          <div className="dark-toggle-row">
-            <span>🌞</span>
-            <ToggleSwitch isDark={isDark} onToggle={() => setIsDark(d => !d)} />
-            <span>🌙</span>
-          </div>
-        </nav>
-      </aside>
+
+    <Sidebar
+      menuOpen={menuOpen}
+      setMenuOpen={setMenuOpen}
+      isDark={isDark}
+      setIsDark={setIsDark}
+    />
 
       {/* Header */}
       <header className="header">
