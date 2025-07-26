@@ -6,9 +6,8 @@ import { callGeminiAPI } from '../llm/gemini'; // Keep your actual API import
 import "./App.css";
 import ToggleSwitch from "./ToggleSwitch";
 import Sidebar from "./Side-bar";
-import MicrophoneButton from "./MicrophoneButton";  // Import the new component
-
-
+import MicrophoneButton from "./MicrophoneButton";
+import Header from "./components/Header";  // ← New import
 
 export default function App() {
   // UI state
@@ -45,11 +44,6 @@ export default function App() {
     }
   }, [toastVisible]);
 
-  // The toast visibility should be triggered inside MicrophoneButton
-  // To keep original behavior exactly the same, you could lift toastVisible
-  // and setToastVisible logic into App and pass a setter as prop if needed.
-  // For now, this remains untouched here.
-
   // Edit workout entry
   const startEditing = (index) => {
     setEditingIndex(index);
@@ -61,7 +55,9 @@ export default function App() {
   };
   const saveEditing = () => {
     if (editText.trim() === "") return; // ignore empty
-    setWorkoutData((prev) => prev.map((item, i) => (i === editingIndex ? editText.trim() : item)));
+    setWorkoutData((prev) =>
+      prev.map((item, i) => (i === editingIndex ? editText.trim() : item))
+    );
     setEditingIndex(null);
     setEditText("");
   };
@@ -91,6 +87,7 @@ export default function App() {
   return (
     <div className="app">
 
+      {/* Sidebar */}
       <Sidebar
         menuOpen={menuOpen}
         setMenuOpen={setMenuOpen}
@@ -98,29 +95,23 @@ export default function App() {
         setIsDark={setIsDark}
       />
 
-      {/* Header */}
-      <header className="header">
-        <button
-          onClick={() => setMenuOpen(m => !m)}
-          className="icon-btn header-menu-btn"
-          aria-label="Toggle menu"
-        >
-          <Menu size={32} />
-        </button>
-        <h1>Gym Whisper</h1>
-        <select className="lang-select" aria-label="Select language">
-          <option>EN</option>
-          <option>ES</option>
-          <option>FR</option>
-        </select>
-      </header>
+      {/* Header (extracted) */}
+      <Header onMenuToggle={() => setMenuOpen(m => !m)} />
 
       {/* Main Content */}
       <main className="main">
-        {/* Here is where MicrophoneButton is used */}
-        <MicrophoneButton workoutData={workoutData} setWorkoutData={setWorkoutData} />
+        {/* Microphone Button */}
+        <MicrophoneButton
+          workoutData={workoutData}
+          setWorkoutData={setWorkoutData}
+        />
 
-        <button onClick={() => setPanelOpen(true)} className="workout-btn" aria-haspopup="dialog">
+        {/* Open Workout Panel */}
+        <button
+          onClick={() => setPanelOpen(true)}
+          className="workout-btn"
+          aria-haspopup="dialog"
+        >
           Your Workout
         </button>
       </main>
@@ -155,7 +146,11 @@ export default function App() {
           >
             <div className="panel-header">
               <h2 id="workout-panel-title">Your Workout</h2>
-              <button onClick={() => setPanelOpen(false)} className="icon-btn" aria-label="Close workout panel">
+              <button
+                onClick={() => setPanelOpen(false)}
+                className="icon-btn"
+                aria-label="Close workout panel"
+              >
                 <ArrowLeft size={24} className="rotated" />
               </button>
             </div>
@@ -167,7 +162,11 @@ export default function App() {
               </div>
             ) : (
               <div className="workout-table-wrapper">
-                <table className="workout-table" role="grid" aria-label="Workout entries">
+                <table
+                  className="workout-table"
+                  role="grid"
+                  aria-label="Workout entries"
+                >
                   <thead>
                     <tr>
                       <th scope="col">WorkoutType</th>
@@ -245,8 +244,7 @@ export default function App() {
                             )}
                           </td>
                         </tr>
-                      );
-                    })}
+                    );})}
                   </tbody>
                 </table>
               </div>
@@ -257,4 +255,3 @@ export default function App() {
     </div>
   );
 }
-
