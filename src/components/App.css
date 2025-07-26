@@ -1,0 +1,543 @@
+/* Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden; /* no horizontal scroll */
+}
+
+/* Remove unexpected white lines by ensuring no margins/padding */
+body {
+  overscroll-behavior-y: contain; /* Prevent scroll bounce overshoot artifacts */
+}
+
+/* Variables */
+:root {
+  --color-bg: #f0f0f3;
+  --color-bg-layer1: #e3e6eb;
+  --color-bg-layer2: #c7ccd4;
+  --color-text: #202124;
+  --color-primary: #4f46e5;
+  --color-surface: #ffffff;
+  --color-surface-variant: #f8f9fb;
+  --color-border: #d0d4db;
+  --color-toast-bg: #333333dd;
+  --color-toast-text: #ffffff;
+  --color-recording: #ef4444;
+  --color-text-secondary: #6b7280;
+  --color-accent: #6366f1;
+  --shadow-light: rgba(0,0,0,0.05);
+  --shadow-dark: rgba(0,0,0,0.15);
+}
+
+html.dark {
+  --color-bg: #121212;
+  --color-bg-layer1: #1a1a1a;
+  --color-bg-layer2: #242424;
+  --color-text: #e4e4e7;
+  --color-primary: #8b5cf6;
+  --color-surface: #1f1f1f;
+  --color-surface-variant: #2a2a2a;
+  --color-border: #3f3f46;
+  --color-toast-bg: #fbbf24dd;
+  --color-toast-text: #000000;
+  --color-recording: #dc2626;
+  --color-text-secondary: #9ca3af;
+  --color-accent: #a78bfa;
+  --shadow-light: rgba(255,255,255,0.05);
+  --shadow-dark: rgba(255,255,255,0.15);
+}
+
+/* App container */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background: 
+    linear-gradient(180deg, var(--color-bg-layer2) 0%, var(--color-bg-layer1) 100%);
+  color: var(--color-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0; bottom: 0; left: 0;
+  width: 240px;
+  padding: 20px 24px;
+  background-color: var(--color-surface);
+  box-shadow:
+    inset -1px 0 0 var(--color-border),
+    0 4px 20px var(--shadow-light);
+  z-index: 50;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+.sidebar.open {
+  transform: translateX(0);
+}
+html.dark .sidebar {
+  background-color: var(--color-surface);
+  box-shadow:
+    inset -1px 0 0 var(--color-border),
+    0 4px 20px var(--shadow-dark);
+}
+
+/* Sidebar header */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 28px;
+}
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+.icon-btn:hover,
+.icon-btn:focus-visible {
+  background-color: var(--color-bg-layer2);
+  outline-offset: 2px;
+}
+html.dark .icon-btn:hover,
+html.dark .icon-btn:focus-visible {
+  background-color: var(--color-bg-layer1);
+}
+.sidebar-header h2 {
+  font-weight: 600;
+  font-size: 22px;
+  margin-left: 12px;
+  color: var(--color-text);
+}
+
+/* Sidebar nav */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.nav-link {
+  width: 100%;
+  text-align: left;
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--color-text);
+  transition: background-color 0.2s ease;
+}
+.nav-link:hover,
+.nav-link:focus-visible {
+  background-color: var(--color-bg-layer1);
+  outline-offset: 2px;
+}
+html.dark .nav-link:hover,
+html.dark .nav-link:focus-visible {
+  background-color: var(--color-bg-layer2);
+}
+
+/* Dark mode toggle row */
+.dark-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px 0 12px;
+  font-size: 22px;
+  user-select: none;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  width: 58px;
+  height: 30px;
+  border-radius: 9999px;
+  background-color: var(--color-surface);
+  border: 2.5px solid var(--color-border);
+  cursor: pointer;
+  transition: background-color 0.35s ease, border-color 0.35s ease;
+  box-shadow:
+    0 2px 8px var(--shadow-light);
+}
+.toggle-switch.dark {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  box-shadow:
+    0 2px 12px var(--color-primary);
+}
+.toggle-switch .thumb {
+  position: absolute;
+  top: 2.5px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  background-color: white;
+  border-radius: 9999px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(0);
+}
+.toggle-switch.dark .thumb {
+  transform: translateX(28px);
+}
+
+/* Header */
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 36px;
+  height: 72px;
+  background-color: transparent;
+  color: var(--color-text);
+  border-bottom: 1.5px solid var(--color-border);
+  box-shadow: 0 2px 8px var(--shadow-light);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+html.dark .header {
+  box-shadow: 0 2px 8px var(--shadow-dark);
+}
+.header-menu-btn {
+  position: absolute;
+  left: 32px;
+  padding: 8px;
+  border-radius: 12px;
+}
+.header-menu-btn:hover,
+.header-menu-btn:focus-visible {
+  background-color: var(--color-bg-layer1);
+  outline-offset: 2px;
+}
+html.dark .header-menu-btn:hover,
+html.dark .header-menu-btn:focus-visible {
+  background-color: var(--color-bg-layer2);
+}
+.header h1 {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+.lang-select {
+  position: absolute;
+  right: 32px;
+  background: transparent;
+  border: 2.5px solid var(--color-accent);
+  padding: 5px 14px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  appearance: none;
+}
+.lang-select:hover,
+.lang-select:focus-visible {
+  background-color: var(--color-bg-layer1);
+  outline-offset: 2px;
+}
+html.dark .lang-select:hover,
+html.dark .lang-select:focus-visible {
+  background-color: var(--color-bg-layer2);
+}
+
+/* Main */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+  text-align: center;
+  gap: 28px;
+}
+
+/* Record button */
+.record-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 240px;
+  height: 240px;
+  border: none;
+  cursor: pointer;
+  box-shadow:
+    0 12px 24px var(--shadow-light),
+    inset 0 0 12px var(--color-primary);
+  background-color: var(--color-surface);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.record-btn:hover,
+.record-btn:focus-visible {
+  box-shadow:
+    0 16px 32px var(--shadow-light),
+    inset 0 0 18px var(--color-primary);
+  outline-offset: 2px;
+  outline: 3px solid var(--color-primary);
+}
+.record-btn.recording {
+  background-color: var(--color-recording);
+  box-shadow:
+    0 16px 32px rgba(239, 68, 68, 0.6),
+    inset 0 0 18px rgba(239, 68, 68, 0.8);
+}
+.record-btn.recording:hover,
+.record-btn.recording:focus-visible {
+  box-shadow:
+    0 20px 40px rgba(239, 68, 68, 0.9),
+    inset 0 0 24px rgba(239, 68, 68, 1);
+  outline-offset: 2px;
+  outline: 3px solid rgba(239, 68, 68, 0.8);
+}
+
+/* Mic icon */
+.icon-primary {
+  color: var(--color-primary);
+  filter: drop-shadow(0 1px 1px rgba(79, 70, 229, 0.5));
+  transition: color 0.3s ease;
+}
+.icon-white {
+  color: white;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.9));
+}
+
+/* Status text */
+.status-text {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  min-height: 28px;
+  max-width: 320px;
+  line-height: 1.3;
+  user-select: none;
+}
+.record-dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: var(--color-recording);
+  margin-right: 10px;
+  animation: pulse 1.5s infinite;
+}
+
+/* Workout Button */
+.workout-btn {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 14px 32px;
+  border-radius: 14px;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px var(--shadow-light);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  user-select: none;
+}
+.workout-btn:hover,
+.workout-btn:focus-visible {
+  background-color: var(--color-accent);
+  box-shadow: 0 6px 18px var(--shadow-light);
+  outline-offset: 2px;
+  outline: 3px solid var(--color-accent);
+}
+html.dark .workout-btn:hover,
+html.dark .workout-btn:focus-visible {
+  background-color: var(--color-accent);
+  box-shadow: 0 6px 18px var(--shadow-dark);
+  outline: 3px solid var(--color-accent);
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-toast-bg);
+  color: var(--color-toast-text);
+  padding: 14px 28px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  font-size: 17px;
+  font-weight: 600;
+  user-select: none;
+  pointer-events: none;
+  z-index: 120;
+}
+
+/* Workout panel */
+.panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 52%;
+  background: linear-gradient(
+    180deg,
+    var(--color-surface-variant) 0%,
+    var(--color-surface) 100%
+  );
+  box-shadow:
+    0 -6px 32px var(--shadow-light);
+  border-radius: 28px 28px 0 0;
+  padding: 28px 36px 32px 36px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  transition: background-color 0.3s ease;
+}
+html.dark .panel {
+  background: linear-gradient(
+    180deg,
+    var(--color-surface) 0%,
+    var(--color-surface-variant) 100%
+  );
+  box-shadow:
+    0 -6px 32px var(--shadow-dark);
+}
+
+/* Panel header */
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  border-bottom: 1.5px solid var(--color-border);
+  padding-bottom: 8px;
+}
+.panel-header h2 {
+  font-weight: 700;
+  font-size: 26px;
+  color: var(--color-text);
+}
+.rotated {
+  transform: rotate(180deg);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.rotated:hover,
+.rotated:focus-visible {
+  color: var(--color-primary);
+  outline-offset: 2px;
+  outline: 2px solid var(--color-primary);
+}
+
+/* Empty workouts placeholder */
+.empty-workouts {
+  font-style: italic;
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin-top: 72px;
+  font-size: 18px;
+}
+
+/* Workout table */
+.workout-table-wrapper {
+  overflow-x: auto;
+  flex: 1;
+}
+.workout-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 17px;
+}
+.workout-table th,
+.workout-table td {
+  border-bottom: 1.5px solid var(--color-border);
+  padding: 14px 18px;
+  text-align: left;
+  vertical-align: middle;
+  color: var(--color-text);
+  transition: background-color 0.3s ease;
+}
+.workout-table th {
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.03em;
+  font-variant: small-caps;
+}
+.workout-table tbody tr:hover {
+  background-color: var(--color-bg-layer2);
+  border-radius: 8px;
+}
+html.dark .workout-table tbody tr:hover {
+  background-color: var(--color-bg-layer1);
+}
+
+/* Actions cell */
+.actions-cell {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+/* Buttons inside workout table */
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.action-btn:hover,
+.action-btn:focus-visible {
+  color: var(--color-accent);
+  background-color: var(--color-bg-layer1);
+  outline-offset: 2px;
+  outline: 2px solid var(--color-accent);
+}
+html.dark .action-btn:hover,
+html.dark .action-btn:focus-visible {
+  background-color: var(--color-bg-layer2);
+}
+
+/* Editing input */
+.edit-input {
+  width: 100%;
+  padding: 8px 12px;
+  
+}
