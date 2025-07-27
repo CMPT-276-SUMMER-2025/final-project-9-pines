@@ -6,8 +6,8 @@ import { callGeminiAPI } from '../llm/gemini'; // Keep your actual API import
 import "./App.css";
 import ToggleSwitch from "./ToggleSwitch";
 import Sidebar from "./Side-bar";
-import MicrophoneButton from "./MicrophoneButton";
-import Header from "./components/Header";  // ← New import
+import MicrophoneButton from "./Microphone-button";
+import Header from "./Header-";  // ← New import
 
 export default function App() {
   // UI state
