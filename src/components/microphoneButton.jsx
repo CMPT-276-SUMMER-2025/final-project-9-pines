@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { callGeminiAPI } from '../llm/gemini';
 import 'material-icons/iconfont/material-icons.css';
+import MicrophoneIcon from '../public/assets/mic_icon.png';
 
 const MicrophoneButton = () => {
     const [status, setStatus] = useState('idle');
     const [isClient, setIsClient] = useState(false);
-    const [workoutData, setWorkoutData]= useState([]);
+    const [workoutData, setWorkoutData] = useState([]);
 
     const {
         transcript,
@@ -23,34 +24,45 @@ const MicrophoneButton = () => {
     const handleClick = async () => {
         if (status === 'idle') {
             setStatus('recording');
-            SpeechRecognition.startListening()
+            SpeechRecognition.startListening();
         } else if (status === 'recording') {
-            SpeechRecognition.stopListening()
-            console.log(transcript)
-            console.log("processing")
+            SpeechRecognition.stopListening();
+            console.log(transcript);
+            console.log("processing");
             setStatus('processing');
             try {
-                const response = await callGeminiAPI(transcript)
+                const response = await callGeminiAPI(transcript);
                 console.log("API Response:", response);
-                console.log(workoutData)
                 setWorkoutData(workoutData => [...workoutData, response.result]);
             } catch (error) {
                 console.error("Error calling LLM API:", error);
             }
-            setStatus("idle")
+            setStatus("idle");
         }
     };
 
     const getButtonContent = () => {
         switch (status) {
             case 'idle':
-                return <span className="material-icons" style={{ fontSize: "3rem" }}>mic</span>
+                return (
+                    <img
+                        src={MicrophoneIcon}
+                        alt="Microphone Icon"
+                        style={{ width: "3rem", height: "3rem" }}
+                    />
+                );
             case 'recording':
-                return <span class="material-icons">more_horiz</span>
+                return <span className="material-icons">more_horiz</span>;
             case 'processing':
-                return <span class="material-icons">check</span>
+                return <span className="material-icons">check</span>;
             default:
-                return <span className="material-icons" style={{ fontSize: "3rem" }}>mic</span>
+                return (
+                    <img
+                        src={MicrophoneIcon}
+                        alt="Microphone Icon"
+                        style={{ width: "3rem", height: "3rem" }}
+                    />
+                );
         }
     };
 
@@ -65,19 +77,19 @@ const MicrophoneButton = () => {
             </div>
         );
     }
+
     if (!isMicrophoneAvailable) {
-        return(
+        return (
             <div>
                 <h1>Please give microphone permission</h1>
             </div>
-        )
+        );
     }
 
     return (
-        <div style={{marginTop:"15%"}}>
+        <div style={{ marginTop: "15%" }}>
             <button
                 onClick={handleClick}
-                // Removed Tailwind className, replaced with style
                 disabled={status === 'processing'}
                 style={{
                     ...styles.button,
@@ -102,7 +114,9 @@ const MicrophoneButton = () => {
                 {getButtonContent()}
             </button>
 
-            <p style={{textAlign: 'center', fontSize: 18, marginTop: 16, color: '#222'}}>{transcript}</p>
+            <p style={{ textAlign: 'center', fontSize: 18, marginTop: 16, color: '#222' }}>
+                {transcript}
+            </p>
 
             {(() => {
                 return (
@@ -156,7 +170,7 @@ const MicrophoneButton = () => {
                                         <tr key={idx}>
                                             <td style={{
                                                 padding: '14px 24px',
-                                                borderBottom: '1px solid #f0f0f0',
+                                                borderBottom: '1px solid rgba(245, 0, 229, 1)
                                                 fontSize: 16,
                                                 color: '#444'
                                             }}>{workoutType}</td>

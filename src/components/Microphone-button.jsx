@@ -1,18 +1,16 @@
 import React from "react";
-import { Mic } from "lucide-react";
 import { motion } from "framer-motion";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
-import { callGeminiAPI } from '../llm/gemini'; // Adjust path if needed
+import { callGeminiAPI } from '../llm/gemini';
+import MicrophoneIcon from '../assets/mic_icon.png';
 
 export default function MicrophoneButton({ workoutData, setWorkoutData }) {
-  // Get speech recognition state/hooks
   const {
     transcript,
     listening,
     resetTranscript,
   } = useSpeechRecognition();
 
-  // Handle mic toggle: start/stop listening and process transcript
   const handleRecordToggle = async () => {
     if (!listening) {
       resetTranscript();
@@ -38,7 +36,12 @@ export default function MicrophoneButton({ workoutData, setWorkoutData }) {
         aria-pressed={listening}
         aria-label={listening ? "Stop recording" : "Start recording"}
       >
-        <Mic size={listening ? 64 : 56} className={listening ? "icon-white" : "icon-primary"} />
+        <img
+          src={MicrophoneIcon}
+          alt="Microphone Icon"
+          width={listening ? 300 : 300}
+          className={listening ? "icon-white" : "icon-primary"}
+        />
       </motion.button>
 
       <p className="status-text" aria-live="polite" aria-atomic="true">
@@ -48,10 +51,9 @@ export default function MicrophoneButton({ workoutData, setWorkoutData }) {
             {transcript || "Listening..."}
           </>
         ) : (
-          "Tap the mic to record"
+          "Tap to record"
         )}
       </p>
     </>
   );
 }
-

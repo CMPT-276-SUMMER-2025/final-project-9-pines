@@ -16,7 +16,7 @@ export default function Hero(){
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
-        background: "#f9fafb", // Tailwind's bg-gray-50
+        background: "#49a4ffff", // Tailwind's bg-gray-50
         flexDirection: "column"
       }}
     >
