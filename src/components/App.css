@@ -16,12 +16,11 @@ html, body {
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden; /* no horizontal scroll */
+  overflow-x: hidden;
 }
 
-/* Remove unexpected white lines by ensuring no margins/padding */
 body {
-  overscroll-behavior-y: contain; /* Prevent scroll bounce overshoot artifacts */
+  overscroll-behavior-y: contain;
 }
 
 /* Variables */
@@ -61,18 +60,14 @@ html.dark {
   --shadow-dark: rgba(255,255,255,0.15);
 }
 
-/* App container */
 .app {
   display: flex;
   flex-direction: column;
   height: 100vh;
   width: 100vw;
-  background: 
-    linear-gradient(180deg, var(--color-bg-layer2) 0%, var(--color-bg-layer1) 100%);
+  background: linear-gradient(180deg, var(--color-bg-layer2) 0%, var(--color-bg-layer1) 100%);
   color: var(--color-text);
   transition: background-color 0.3s ease, color 0.3s ease;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Sidebar */
@@ -383,6 +378,101 @@ html.dark .workout-btn:focus-visible {
   outline: 3px solid var(--color-accent);
 }
 
+
+
+
+/* Finalize Summary */
+.finalize-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 0 12px;
+}
+
+.finalize-summary h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text);
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.finalize-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.finalize-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+  padding-bottom: 20px; /* Add some bottom padding */
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    var(--color-surface) 50%,
+    transparent 100%
+  );
+}
+.confirmation-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.confirmation-content {
+  background-color: var(--color-surface);
+  padding: 24px;
+  border-radius: 16px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--color-border);
+}
+
+.confirmation-content p {
+  margin-bottom: 24px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text);
+  text-align: center;
+}
+
+.confirmation-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.finalize-confirm {
+  background-color: #ef4444 !important;
+}
+
+.finalize-confirm:hover {
+  background-color: #dc2626 !important;
+}
+
+.panel {
+  z-index: 100;
+}
+
+
+
+
+
+
+
 /* Toast */
 .toast {
   position: fixed;
@@ -401,38 +491,39 @@ html.dark .workout-btn:focus-visible {
   z-index: 120;
 }
 
-/* Workout panel */
 .panel {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
-  height: 52%;
-  background: linear-gradient(
-    180deg,
-    var(--color-surface-variant) 0%,
-    var(--color-surface) 100%
-  );
-  box-shadow:
-    0 -6px 32px var(--shadow-light);
+  height: 70%;
+  background: var(--color-surface);
+  box-shadow: 0 -6px 32px var(--shadow-light);
   border-radius: 28px 28px 0 0;
   padding: 28px 36px 32px 36px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   z-index: 100;
-  backdrop-filter: saturate(180%) blur(12px);
-  -webkit-backdrop-filter: saturate(180%) blur(12px);
   transition: background-color 0.3s ease;
+  /* Add background image properties */
+  background-image: url('../assets/background_2.PNG');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-blend-mode: overlay; /* This blends the color with the image */
+  
+}
+
+html.dark .panel {
+  background: var(--color-surface);
+  box-shadow: 0 -6px 32px var(--shadow-dark);
+  /* Adjust for dark mode if needed */
+  background-blend-mode: soft-light;
 }
 html.dark .panel {
-  background: linear-gradient(
-    180deg,
-    var(--color-surface) 0%,
-    var(--color-surface-variant) 100%
-  );
-  box-shadow:
-    0 -6px 32px var(--shadow-dark);
+  background: var(--color-surface); /* Changed to solid background */
+  box-shadow: 0 -6px 32px var(--shadow-dark);
 }
 
 /* Panel header */
@@ -470,10 +561,11 @@ html.dark .panel {
   font-size: 18px;
 }
 
-/* Workout table */
 .workout-table-wrapper {
   overflow-x: auto;
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 .workout-table {
   width: 100%;
