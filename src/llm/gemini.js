@@ -24,6 +24,11 @@ Example 3:
 --Reasoning:--: The input describes multiple workout sets in one prompt, so we need to output multiple lines of csv data. Using the same reasoning for the above examples we got the following output:
 BenchPress,10,135lbs;BenchPress,9,135lbs;BenchPress,8,135lbs;BenchPress,12,95lbs
 
+Example 4: "I did 3 sets of lat pull downs with 110lbs,10reps then 9 and 8. And 4 sets of pushups 10 reps, 9 and 7"
+--Reasoning--: Same reasoning as above examples
+
+Output: "LatPullDown,10,110lbs;LatPullDown,9,110lbs;LatPullDown,8,110lbs;PushUps,10,Bodyweight;PushUps,9,Bodyweight;PushUps,7,Bodyweight;"
+
 Now complete the following example:
 
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { callGeminiAPI } from '../llm/gemini';
-import MicrophoneIcon from '../assets/mic_icon.png';
+import MicrophoneIcon from '../assets/purplemic.png';
 
 export default function MicrophoneButton({
   workoutData,
