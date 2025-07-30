@@ -11,15 +11,27 @@ export default function MicrophoneButton({ workoutData, setWorkoutData }) {
     resetTranscript,
   } = useSpeechRecognition();
 
+  function updateWorkoutData(csvString){
+    if (!csvString || typeof csvString !== "string") return;
+    // Split by ';' and trim each entry
+    const entries = csvString.split(";").map(s => s.trim()).filter(Boolean);
+    if (entries.length === 0) return;
+    setWorkoutData(prev => [...prev, ...entries]);
+  }
+
   const handleRecordToggle = async () => {
     if (!listening) {
       resetTranscript();
       SpeechRecognition.startListening({ continuous: true });
     } else {
       SpeechRecognition.stopListening();
+      if(transcript === ""){
+        return
+      }
       try {
         const response = await callGeminiAPI(transcript);
-        setWorkoutData((prev) => [...prev, response.result]);
+
+        updateWorkoutData(response.result)
       } catch (error) {
         console.error("LLM API error:", error);
       }
