@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
-
+//SET TEMPERATURE to 0
+//Dont let user ramble on, check before continuing
 const ai = new GoogleGenAI({ apiKey: "AIzaSyCHEbnuTeXfarDkKTbS5E50YGwMothFQ5g" });
 const csvDataPrompt = `You are part of a workout tracking application. 
 You will only reply with CSV data values.
@@ -17,7 +18,14 @@ Example 2:
 ---Reasoning---: For the workout type of lateral raises, we set the weight to 20lbs, because this is what the user has in each hand.
 Output: LateralRaise,6,20lbs
 
-Now complete this example:
+Example 3:
+"I just did my benchpress workout, it consited of 3 sets of a plate and 1 set of just 25lbs, first set I did 10 reps, second set I did 9, third did 8. And the 4th with 25lbs I did 12reps"
+
+--Reasoning:--: The input describes multiple workout sets in one prompt, so we need to output multiple lines of csv data. Using the same reasoning for the above examples we got the following output:
+BenchPress,10,135lbs;BenchPress,9,135lbs;BenchPress,8,135lbs;BenchPress,12,95lbs
+
+Now complete the following example:
+
 
 `;
 
@@ -35,7 +43,8 @@ export async function callGeminiAPI(text) {
       contents: prompt,
       config: {
         thinkingConfig: {
-          thinkingBudget: 0, // Disables thinking
+          thinkingBudget: 0,
+          temperature:0 // Disables thinking
         },
         }
     });

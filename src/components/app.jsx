@@ -45,6 +45,8 @@ export default function App() {
     }
   }, [toastVisible]);
 
+  
+
   // startEditing, cancelEditing, saveEditing, handleFinalize, confirmFinalize, cancelFinalize, removeEntry functions moved to WorkoutPanel
   // ConfirmationDialog component definition moved to its own file and used in WorkoutPanel
 

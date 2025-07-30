@@ -43,13 +43,46 @@ export default function WorkoutPanel({
     setFinalizedWorkout(workoutData);
   };
 
+  // NEW FUNCTION: downloadCSVWorkoutData - Moved from original App.jsx
+  function downloadCSVWorkoutData(){
+    // Generates and triggers download of a CSV file from workoutData
+    if (!workoutData || workoutData.length === 0) {
+      alert("No workout data to export.");
+      return;
+    }
+
+    // Prepare CSV header and rows
+    const header = "workoutType,Reps,Weight";
+    const rows = workoutData.map(row => {
+      // If already CSV, just return; else, try to join array
+      if (typeof row === "string") return row;
+      if (Array.isArray(row)) return row.join(",");
+      return "";
+    });
+    const csvContent = [header, ...rows].join("\r\n");
+
+    // Create a Blob and trigger download
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "workout_data.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    return null
+  }
+
   const confirmFinalize = () => {
     setShowConfirmDialog(false);
-    alert("Workout finalized! Ready to save as PDF."); // Exact alert message from original App.jsx
+    alert("Workout finalized! Ready to save as CSV"); // Updated alert message
+    downloadCSVWorkoutData(); // CALL THE NEWLY MOVED FUNCTION HERE
     setFinalizing(false);
     setFinalizedWorkout(null);
-    setWorkoutData([]); // Clears workoutData
-    setPanelOpen(false); // Closes the panel
+    setWorkoutData([]);
+    setPanelOpen(false);
   };
 
   const cancelFinalize = () => {
