@@ -1,25 +1,43 @@
 import React from "react";
 import { motion } from "framer-motion";
-import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import { callGeminiAPI } from '../llm/gemini';
-import MicrophoneIcon from '../assets/mic_icon.png';
+import MicrophoneIcon from '../assets/purplemic.png';
 
-export default function MicrophoneButton({ workoutData, setWorkoutData }) {
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-  } = useSpeechRecognition();
+export default function MicrophoneButton({
+  workoutData,
+  setWorkoutData,
+  setToastVisible, 
+  transcript,      
+  listening,       
+  resetTranscript, 
+  startListening,  
+  stopListening    
+}) {
+
+  function updateWorkoutData(csvString){
+    if (!csvString || typeof csvString !== "string") return;
+    // Split by ';' and trim each entry
+    const entries = csvString.split(";").map(s => s.trim()).filter(Boolean);
+    if (entries.length === 0) return;
+    setWorkoutData(prev => [...prev, ...entries]);
+  }
 
   const handleRecordToggle = async () => {
     if (!listening) {
       resetTranscript();
-      SpeechRecognition.startListening({ continuous: true });
+      startListening({ continuous: true }); 
     } else {
-      SpeechRecognition.stopListening();
+      stopListening(); 
+      if(transcript === ""){
+        return
+      }
       try {
         const response = await callGeminiAPI(transcript);
-        setWorkoutData((prev) => [...prev, response.result]);
+
+        updateWorkoutData(response.result); 
+
+        setToastVisible(true);
+
       } catch (error) {
         console.error("LLM API error:", error);
       }
@@ -48,7 +66,7 @@ export default function MicrophoneButton({ workoutData, setWorkoutData }) {
         {listening ? (
           <>
             <span className="record-dot" aria-hidden="true">●</span>
-            {transcript || "Listening..."}
+            {transcript || "Listening..."} {/* Using the passed prop */}
           </>
         ) : (
           "Tap to record"

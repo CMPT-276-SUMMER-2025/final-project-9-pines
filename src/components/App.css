@@ -16,64 +16,100 @@ html, body {
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden; /* no horizontal scroll */
+  overflow-x: hidden;
 }
 
-/* Remove unexpected white lines by ensuring no margins/padding */
 body {
-  overscroll-behavior-y: contain; /* Prevent scroll bounce overshoot artifacts */
+  overscroll-behavior-y: contain;
 }
 
 /* Variables */
 :root {
   --color-bg: #f0f0f3;
-  --color-bg-layer1: #4e92ff;
-  --color-bg-layer2: #c7ccd4;
+  /* --- ADJUSTED GRADIENT COLORS FOR LIGHT MODE --- */
+  --color-bg-layer1: #D6BCF6; /* Lighter purple/lavender tone */
+  --color-bg-layer2: #EFE8FA; /* Even lighter, almost white purple tone */
   --color-text: #202124;
-  --color-primary: #4f46e5;
+  
+  /* --- NEW PURPLE SHADES FOR LIGHT MODE --- */
+  --color-primary: #8A2BE2; /* BlueViolet - Main interactive elements */
   --color-surface: #ffffff;
   --color-surface-variant: #f8f9fb;
   --color-border: #d0d4db;
   --color-toast-bg: #333333dd;
   --color-toast-text: #ffffff;
-  --color-recording: #ef4444;
+  --color-recording: #6A0DAD; /* Deep Purple - For recording state */
   --color-text-secondary: #6b7280;
-  --color-accent: #6366f1;
+  --color-accent: #9932CC; /* DarkOrchid - For hover/focus states */
+  /* --- END NEW PURPLE SHADES --- */
+
   --shadow-light: rgba(0,0,0,0.05);
   --shadow-dark: rgba(0,0,0,0.15);
 }
 
 html.dark {
   --color-bg: #121212;
-  --color-bg-layer1: #1a1a1a;
-  --color-bg-layer2: #242424;
+  /* --- ADJUSTED GRADIENT COLORS FOR DARK MODE --- */
+  --color-bg-layer1: #2A0A47; /* Darker purple */
+  --color-bg-layer2: #1D072E; /* Even darker purple */
   --color-text: #e4e4e7;
-  --color-primary: #8b5cf6;
+  
+  /* --- NEW PURPLE SHADES FOR DARK MODE --- */
+  --color-primary: #9370DB; /* MediumPurple - Main interactive elements in dark mode */
   --color-surface: #1f1f1f;
   --color-surface-variant: #2a2a2a;
   --color-border: #3f3f46;
   --color-toast-bg: #fbbf24dd;
   --color-toast-text: #000000;
-  --color-recording: #dc2626;
+  --color-recording: #7B0099; /* Vibrant Deep Purple - For recording state in dark mode */
   --color-text-secondary: #9ca3af;
-  --color-accent: #a78bfa;
+  --color-accent: #BA55D3; /* MediumOrchid - For hover/focus states in dark mode */
+  /* --- END NEW PURPLE SHADES --- */
+  
   --shadow-light: rgba(255,255,255,0.05);
   --shadow-dark: rgba(255,255,255,0.15);
 }
 
-/* App container */
 .app {
   display: flex;
   flex-direction: column;
   height: 100vh;
   width: 100vw;
-  background: 
-    linear-gradient(180deg, var(--color-bg-layer2) 0%, var(--color-bg-layer1) 100%);
+  
+  /* Your original gradient background for the app */
+  background: linear-gradient(180deg, var(--color-bg-layer2) 0%, var(--color-bg-layer1) 100%);
   color: var(--color-text);
-  transition: background-color 0.3s ease, color 0.3s ease;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  
+  /* Transition for background (for dark mode) and text color */
+  transition: background 0.3s ease, color 0.3s ease; 
+
+  /* Needed for positioning the ::before pseudo-element background */
+  position: relative;
+  z-index: 0; 
 }
+
+/* Pseudo-element for the floating dumbbells background pattern */
+.app::before {
+  content: ''; 
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  
+  background-image: url('../assets/backgrounddumbbell-Photoroom.jpg'); 
+  background-repeat: repeat;
+  background-size: auto; 
+  background-position: center center;
+  background-attachment: fixed;
+  
+  opacity: 0.15; 
+  
+  z-index: -1; 
+  
+  transition: opacity 0.3s ease; 
+}
+
 
 /* Sidebar */
 .sidebar {
@@ -129,7 +165,10 @@ html.dark .icon-btn:focus-visible {
   font-weight: 600;
   font-size: 22px;
   margin-left: 12px;
-  color: var(--color-text);
+  color: var(--color-primary); 
+  /* --- NEW: Minimalistic Font --- */
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: 0.05em; /* Slightly increased for minimalistic feel */
 }
 
 /* Sidebar nav */
@@ -215,7 +254,7 @@ html.dark .nav-link:focus-visible {
   justify-content: center;
   padding: 18px 36px;
   height: 72px;
-  background-color: transparent;
+  background-color: transparent; 
   color: var(--color-text);
   border-bottom: 1.5px solid var(--color-border);
   box-shadow: 0 2px 8px var(--shadow-light);
@@ -244,12 +283,16 @@ html.dark .header-menu-btn:focus-visible {
   font-weight: 800;
   margin: 0;
   letter-spacing: 0.04em;
+  color: var(--color-primary);
+  /* --- NEW: Minimalistic Font --- */
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: 0.08em; /* Slightly increased for emphasis */
 }
 .lang-select {
   position: absolute;
   right: 32px;
   background: transparent;
-  border: 2.5px solid var(--color-accent);
+  border: 2.5px solid var(--color-accent); 
   padding: 5px 14px;
   border-radius: 12px;
   font-size: 18px;
@@ -293,7 +336,7 @@ html.dark .lang-select:focus-visible {
   cursor: pointer;
   box-shadow:
     0 12px 24px var(--shadow-light),
-    inset 0 0 12px var(--color-primary);
+    inset 0 0 12px var(--color-primary); 
   background-color: var(--color-surface);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -301,34 +344,34 @@ html.dark .lang-select:focus-visible {
 .record-btn:focus-visible {
   box-shadow:
     0 16px 32px var(--shadow-light),
-    inset 0 0 18px var(--color-primary);
+    inset 0 0 18px var(--color-primary); 
   outline-offset: 2px;
-  outline: 3px solid var(--color-primary);
+  outline: 3px solid var(--color-primary); 
 }
 .record-btn.recording {
-  background-color: var(--color-recording);
+  background-color: var(--color-recording); 
   box-shadow:
-    0 16px 32px rgba(239, 68, 68, 0.6),
-    inset 0 0 18px rgba(239, 68, 68, 0.8);
+    0 16px 32px rgba(106, 13, 173, 0.6), 
+    inset 0 0 18px rgba(106, 13, 173, 0.8); 
 }
 .record-btn.recording:hover,
 .record-btn.recording:focus-visible {
   box-shadow:
-    0 20px 40px rgba(239, 68, 68, 0.9),
-    inset 0 0 24px rgba(239, 68, 68, 1);
+    0 20px 40px rgba(106, 13, 173, 0.9), 
+    inset 0 0 24px rgba(106, 13, 173, 1); 
   outline-offset: 2px;
-  outline: 3px solid rgba(239, 68, 68, 0.8);
+  outline: 3px solid rgba(106, 13, 173, 0.8); 
 }
 
 /* Mic icon */
 .icon-primary {
-  color: var(--color-primary);
-  filter: drop-shadow(0 1px 1px rgba(79, 70, 229, 0.5));
+  color: var(--color-primary); 
+  filter: drop-shadow(0 1px 1px rgba(138, 43, 226, 0.5)); 
   transition: color 0.3s ease;
 }
 .icon-white {
   color: white;
-  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.9));
+  filter: drop_shadow(0 0 6px rgba(255, 255, 255, 0.9));
 }
 
 /* Status text */
@@ -350,14 +393,14 @@ html.dark .lang-select:focus-visible {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background-color: var(--color-recording);
+  background-color: var(--color-recording); 
   margin-right: 10px;
   animation: pulse 1.5s infinite;
 }
 
 /* Workout Button */
 .workout-btn {
-  background-color: var(--color-primary);
+  background-color: var(--color-primary); 
   color: white;
   padding: 14px 32px;
   border-radius: 14px;
@@ -371,17 +414,112 @@ html.dark .lang-select:focus-visible {
 }
 .workout-btn:hover,
 .workout-btn:focus-visible {
-  background-color: var(--color-accent);
+  background-color: var(--color-accent); 
   box-shadow: 0 6px 18px var(--shadow-light);
   outline-offset: 2px;
-  outline: 3px solid var(--color-accent);
+  outline: 3px solid var(--color-accent); 
 }
 html.dark .workout-btn:hover,
 html.dark .workout-btn:focus-visible {
-  background-color: var(--color-accent);
+  background-color: var(--color-accent); 
   box-shadow: 0 6px 18px var(--shadow-dark);
   outline: 3px solid var(--color-accent);
 }
+
+
+
+
+/* Finalize Summary */
+.finalize-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 0 12px;
+}
+
+.finalize-summary h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text);
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.finalize-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.finalize-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+  padding-bottom: 20px; 
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    var(--color-surface) 50%,
+    transparent 100%
+  );
+}
+.confirmation-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.confirmation-content {
+  background-color: var(--color-surface);
+  padding: 24px;
+  border-radius: 16px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--color-border);
+}
+
+.confirmation-content p {
+  margin-bottom: 24px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text);
+  text-align: center;
+}
+
+.confirmation-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.finalize-confirm {
+  background-color: var(--color-recording) !important; 
+}
+
+.finalize-confirm:hover {
+  background-color: #5A0DAD !important; 
+}
+
+.panel {
+  z-index: 100;
+}
+
+
+
+
+
+
 
 /* Toast */
 .toast {
@@ -401,38 +539,37 @@ html.dark .workout-btn:focus-visible {
   z-index: 120;
 }
 
-/* Workout panel */
 .panel {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
-  height: 52%;
-  background: linear-gradient(
-    180deg,
-    var(--color-surface-variant) 0%,
-    var(--color-surface) 100%
-  );
-  box-shadow:
-    0 -6px 32px var(--shadow-light);
+  height: 70%;
+  background: var(--color-surface);
+  box-shadow: 0 -6px 32px var(--shadow-light);
   border-radius: 28px 28px 0 0;
   padding: 28px 36px 32px 36px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   z-index: 100;
-  backdrop-filter: saturate(180%) blur(12px);
-  -webkit-backdrop-filter: saturate(180%) blur(12px);
   transition: background-color 0.3s ease;
+  background-image: url('../assets/background_2.PNG');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-blend-mode: overlay; 
+  
+}
+
+html.dark .panel {
+  background: var(--color-surface);
+  box-shadow: 0 -6px 32px var(--shadow-dark);
+  background-blend-mode: soft-light;
 }
 html.dark .panel {
-  background: linear-gradient(
-    180deg,
-    var(--color-surface) 0%,
-    var(--color-surface-variant) 100%
-  );
-  box-shadow:
-    0 -6px 32px var(--shadow-dark);
+  background: var(--color-surface); 
+  box-shadow: 0 -6px 32px var(--shadow-dark);
 }
 
 /* Panel header */
@@ -447,7 +584,10 @@ html.dark .panel {
 .panel-header h2 {
   font-weight: 700;
   font-size: 26px;
-  color: var(--color-text);
+  color: var(--color-primary);
+  /* --- NEW: Minimalistic Font --- */
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: 0.05em; /* Slightly increased for minimalistic feel */
 }
 .rotated {
   transform: rotate(180deg);
@@ -470,10 +610,11 @@ html.dark .panel {
   font-size: 18px;
 }
 
-/* Workout table */
 .workout-table-wrapper {
   overflow-x: auto;
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 .workout-table {
   width: 100%;
@@ -519,16 +660,16 @@ html.dark .workout-table tbody tr:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-primary);
+  color: var(--color-primary); 
   border-radius: 8px;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 .action-btn:hover,
 .action-btn:focus-visible {
-  color: var(--color-accent);
+  color: var(--color-accent); 
   background-color: var(--color-bg-layer1);
   outline-offset: 2px;
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-accent); 
 }
 html.dark .action-btn:hover,
 html.dark .action-btn:focus-visible {

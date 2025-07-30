@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
-import { Menu, ArrowLeft, Trash2, Edit2, Check, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
-import { callGeminiAPI } from '../llm/gemini'; // Keep your actual API import
 import "./App.css";
-import ToggleSwitch from "./ToggleSwitch";
+
 import Sidebar from "./Side-bar";
 import MicrophoneButton from "./Microphone-button";
-import Header from "./Header-";  // ← New import
+import Header from "./Header-";
+import Toast from "./Toast"; 
+import WorkoutPanel from "./WorkoutPanel"; 
 
 export default function App() {
   // UI state
@@ -15,16 +14,18 @@ export default function App() {
   const [isDark, setIsDark] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
-  const [editingIndex, setEditingIndex] = useState(null);
-  const [editText, setEditText] = useState("");
+  // editingIndex, editText, showConfirmDialog, finalizing, finalizedWorkout states moved to WorkoutPanel
 
   // Speech recognition & transcription
   const {
+    transcript,
+    listening,
+    resetTranscript,
     browserSupportsSpeechRecognition,
     isMicrophoneAvailable
   } = useSpeechRecognition();
 
-  // Workouts list, saved as array of strings for simplicity (CSV format)
+  // Workouts list, saved as array of strings (CSV)
   const [workoutData, setWorkoutData] = useState([]);
 
   // Toggle dark mode on <html>
@@ -44,29 +45,10 @@ export default function App() {
     }
   }, [toastVisible]);
 
-  // Edit workout entry
-  const startEditing = (index) => {
-    setEditingIndex(index);
-    setEditText(workoutData[index]);
-  };
-  const cancelEditing = () => {
-    setEditingIndex(null);
-    setEditText("");
-  };
-  const saveEditing = () => {
-    if (editText.trim() === "") return; // ignore empty
-    setWorkoutData((prev) =>
-      prev.map((item, i) => (i === editingIndex ? editText.trim() : item))
-    );
-    setEditingIndex(null);
-    setEditText("");
-  };
+  
 
-  // Remove workout entry
-  const removeEntry = (index) => {
-    setWorkoutData((prev) => prev.filter((_, i) => i !== index));
-    if (editingIndex === index) cancelEditing();
-  };
+  // startEditing, cancelEditing, saveEditing, handleFinalize, confirmFinalize, cancelFinalize, removeEntry functions moved to WorkoutPanel
+  // ConfirmationDialog component definition moved to its own file and used in WorkoutPanel
 
   if (!browserSupportsSpeechRecognition) {
     return (
@@ -104,6 +86,12 @@ export default function App() {
         <MicrophoneButton
           workoutData={workoutData}
           setWorkoutData={setWorkoutData}
+          setToastVisible={setToastVisible}            // ← Trigger the toast here
+          transcript={transcript}
+          listening={listening}
+          resetTranscript={resetTranscript}
+          startListening={SpeechRecognition.startListening}
+          stopListening={SpeechRecognition.stopListening}
         />
 
         {/* Open Workout Panel */}
@@ -116,142 +104,16 @@ export default function App() {
         </button>
       </main>
 
-      {/* Toast */}
-      <AnimatePresence>
-        {toastVisible && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            className="toast"
-            role="alert"
-          >
-            Added to your workout!
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Toast (extracted) */}
+      <Toast toastVisible={toastVisible} message="Added to your workout!" />
 
       {/* Workout Panel */}
-      <AnimatePresence>
-        {panelOpen && (
-          <motion.div
-            className="panel"
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ type: "tween", duration: 0.3 }}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="workout-panel-title"
-          >
-            <div className="panel-header">
-              <h2 id="workout-panel-title">Your Workout</h2>
-              <button
-                onClick={() => setPanelOpen(false)}
-                className="icon-btn"
-                aria-label="Close workout panel"
-              >
-                <ArrowLeft size={24} className="rotated" />
-              </button>
-            </div>
-
-            {workoutData.length === 0 ? (
-              <div className="empty-workouts">
-                <p>No workout data yet</p>
-                <p>Record your exercises to see them here</p>
-              </div>
-            ) : (
-              <div className="workout-table-wrapper">
-                <table
-                  className="workout-table"
-                  role="grid"
-                  aria-label="Workout entries"
-                >
-                  <thead>
-                    <tr>
-                      <th scope="col">WorkoutType</th>
-                      <th scope="col">Reps</th>
-                      <th scope="col">Weight</th>
-                      <th scope="col" aria-label="Actions"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {workoutData.map((entry, idx) => {
-                      // parse CSV string (WorkoutType,Reps,Weight)
-                      const parts = entry.split(",");
-                      const workoutType = parts[0] || "";
-                      const reps = parts[1] || "";
-                      const weight = parts[2] || "";
-
-                      const isEditing = editingIndex === idx;
-
-                      return (
-                        <tr key={idx} className={isEditing ? "editing" : ""}>
-                          <td>
-                            {isEditing ? (
-                              <input
-                                type="text"
-                                value={editText}
-                                onChange={(e) => setEditText(e.target.value)}
-                                className="edit-input"
-                                aria-label="Edit workout entry"
-                              />
-                            ) : (
-                              workoutType
-                            )}
-                          </td>
-                          <td>{isEditing ? "" : reps}</td>
-                          <td>{isEditing ? "" : weight}</td>
-                          <td className="actions-cell">
-                            {isEditing ? (
-                              <>
-                                <button
-                                  onClick={saveEditing}
-                                  className="icon-btn action-btn"
-                                  aria-label="Save edit"
-                                  title="Save"
-                                >
-                                  <Check size={20} />
-                                </button>
-                                <button
-                                  onClick={cancelEditing}
-                                  className="icon-btn action-btn"
-                                  aria-label="Cancel edit"
-                                  title="Cancel"
-                                >
-                                  <X size={20} />
-                                </button>
-                              </>
-                            ) : (
-                              <>
-                                <button
-                                  onClick={() => startEditing(idx)}
-                                  className="icon-btn action-btn"
-                                  aria-label={`Edit workout entry ${idx + 1}`}
-                                  title="Edit"
-                                >
-                                  <Edit2 size={20} />
-                                </button>
-                                <button
-                                  onClick={() => removeEntry(idx)}
-                                  className="icon-btn action-btn"
-                                  aria-label={`Delete workout entry ${idx + 1}`}
-                                  title="Delete"
-                                >
-                                  <Trash2 size={20} />
-                                </button>
-                              </>
-                            )}
-                          </td>
-                        </tr>
-                    );})}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <WorkoutPanel
+        panelOpen={panelOpen}
+        setPanelOpen={setPanelOpen}
+        workoutData={workoutData}
+        setWorkoutData={setWorkoutData}
+      />
     </div>
   );
 }
