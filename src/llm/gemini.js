@@ -1,7 +1,11 @@
 import { GoogleGenAI } from "@google/genai";
 //SET TEMPERATURE to 0
 //Dont let user ramble on, check before continuing
-const ai = new GoogleGenAI({ apiKey: "AIzaSyCHEbnuTeXfarDkKTbS5E50YGwMothFQ5g" });
+const apiKey = process.env.REACT_APP_GEMINI_API_KEY;
+if (!apiKey) {
+  throw new Error('REACT_APP_GEMINI_API_KEY environment variable is not set. Please add it to your .env file.');
+}
+const ai = new GoogleGenAI({ apiKey });
 const csvDataPrompt = `You are part of a workout tracking application. 
 You will only reply with CSV data values.
 Extract the following data from the user's workout description in this format: workoutType,Reps,Weight

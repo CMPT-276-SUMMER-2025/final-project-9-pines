@@ -20,6 +20,7 @@ export default function MicrophoneButton({
     const entries = csvString.split(";").map(s => s.trim()).filter(Boolean);
     if (entries.length === 0) return;
     setWorkoutData(prev => [...prev, ...entries]);
+    //update local storage
   }
 
   const handleRecordToggle = async () => {

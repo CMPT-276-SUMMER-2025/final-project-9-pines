@@ -23,7 +23,7 @@ export default function Sidebar({ menuOpen, setMenuOpen, isDark, setIsDark }) {
       <nav className="sidebar-nav">
         {/* Navigation link for tutorials (currently dummy link) */}
         <button className="nav-link" onClick={() => window.open("#", "_self")}>
-          Tutorials
+          History
         </button>
 
         {/* Dark mode toggle row with sun/moon icons */}
