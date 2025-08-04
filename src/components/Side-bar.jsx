@@ -1,5 +1,6 @@
 // Sidebar.jsx
 import { ArrowLeft } from "lucide-react"; // Icon for closing the sidebar
+import { Link } from "react-router-dom"; // For navigation
 import ToggleSwitch from "./ToggleSwitch"; // Custom toggle component for dark/light mode
 
 // Sidebar component receives state and toggle functions as props from App.jsx
@@ -21,10 +22,14 @@ export default function Sidebar({ menuOpen, setMenuOpen, isDark, setIsDark }) {
 
       {/* Navigation section */}
       <nav className="sidebar-nav">
-        {/* Navigation link for tutorials (currently dummy link) */}
-        <button className="nav-link" onClick={() => window.open("#", "_self")}>
+        {/* Navigation links */}
+        <Link to="/" className="nav-link" onClick={() => setMenuOpen(false)}>
+          Home
+        </Link>
+        
+        <Link to="/history" className="nav-link" onClick={() => setMenuOpen(false)}>
           History
-        </button>
+        </Link>
 
         {/* Dark mode toggle row with sun/moon icons */}
         <div className="dark-toggle-row">

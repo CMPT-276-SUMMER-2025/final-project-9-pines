@@ -19,9 +19,28 @@ export default function MicrophoneButton({
     // Split by ';' and trim each entry
     const entries = csvString.split(";").map(s => s.trim()).filter(Boolean);
     if (entries.length === 0) return;
+    // For each entry, append the current date as a string (ISO format)
+    const today = new Date().toISOString().split('T')[0]; // e.g., "2024-06-09"
+    for (let i = 0; i < entries.length; i++) {
+      entries[i] = entries[i] + "," + today;
+    }
+    
     setWorkoutData(prev => [...prev, ...entries]);
     //update local storage
+    storeWorkoutDataInLocalStorage([...workoutData, ...entries])
+
   }
+
+  function storeWorkoutDataInLocalStorage(data) {
+    console.log(data)
+    try {
+      const jsonString = JSON.stringify(data);
+      localStorage.setItem('gymWhisperData', jsonString);
+    } catch (e) {
+      console.error("Failed to store data in localStorage:", e);
+    }
+  }
+  
 
   const handleRecordToggle = async () => {
     if (!listening) {
