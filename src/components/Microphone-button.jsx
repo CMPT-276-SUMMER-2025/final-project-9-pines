@@ -24,17 +24,33 @@ export default function MicrophoneButton({
     for (let i = 0; i < entries.length; i++) {
       entries[i] = entries[i] + "," + today;
     }
-    
-    setWorkoutData(prev => [...prev, ...entries]);
-    //update local storage
-    storeWorkoutDataInLocalStorage([...workoutData, ...entries])
+    console.log(workoutData)
+    if(workoutData === undefined || workoutData === null){
+      setWorkoutData([...entries]);
+      storeWorkoutDataInLocalStorage(entries)
+
+    }else{
+      setWorkoutData(prev => [...prev, ...entries]);
+      //update local storage
+      storeWorkoutDataInLocalStorage(entries)
+    }
+
 
   }
 
   function storeWorkoutDataInLocalStorage(data) {
     console.log(data)
     try {
-      const jsonString = JSON.stringify(data);
+      const currentDataInLocalStorage = localStorage.getItem('gymWhisperData')
+      if(currentDataInLocalStorage === null){
+        const jsonString = JSON.stringify([data]);
+        localStorage.setItem('gymWhisperData', jsonString);
+        return
+      }
+      const currentData = JSON.parse(currentDataInLocalStorage)
+      console.log(currentData)
+      const newData = [...currentData, ...data]
+      const jsonString = JSON.stringify(newData);
       localStorage.setItem('gymWhisperData', jsonString);
     } catch (e) {
       console.error("Failed to store data in localStorage:", e);

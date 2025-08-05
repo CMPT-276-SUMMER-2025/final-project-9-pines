@@ -23,7 +23,7 @@ export default function HomePage() {
   } = useSpeechRecognition();
 
   // Workouts list, saved as array of strings (CSV)
-  const [workoutData, setWorkoutData] = useState([]);
+  const [workoutData, setWorkoutData] = useState();
 
   // Toggle dark mode on <html>
   useEffect(() => {

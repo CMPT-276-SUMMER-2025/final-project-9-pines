@@ -125,7 +125,7 @@ export default function WorkoutPanel({
               setShowConfirmDialog={setShowConfirmDialog}
               cancelFinalize={cancelFinalize}
             />
-          ) : workoutData.length === 0 ? (
+          ) : workoutData?.length === 0 ? (
             <div className="empty-workouts">
               <p>No workout data yet</p>
               <p>Record your exercises to see them here</p>
