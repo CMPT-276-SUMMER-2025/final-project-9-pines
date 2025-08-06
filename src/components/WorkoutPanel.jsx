@@ -32,13 +32,33 @@ export default function WorkoutPanel({
   const saveEditing = () => {
     if (editText.trim() === "") return;
     setWorkoutData((prev) =>
-      prev.map((item, i) => (i === editingIndex ? editText.trim() : item))
+      prev?.map((item, i) => (i === editingIndex ? editText.trim() : item))
     );
     setEditingIndex(null);
     setEditText("");
   };
 
+  function storeWorkoutDataInLocalStorage(data) {
+    console.log(data)
+    try {
+      const currentDataInLocalStorage = localStorage.getItem('gymWhisperData')
+      if(currentDataInLocalStorage === null){
+        const jsonString = JSON.stringify([data]);
+        localStorage.setItem('gymWhisperData', jsonString);
+        return
+      }
+      const currentData = JSON.parse(currentDataInLocalStorage)
+      console.log(currentData)
+      const newData = [...currentData, ...data]
+      const jsonString = JSON.stringify(newData);
+      localStorage.setItem('gymWhisperData', jsonString);
+    } catch (e) {
+      console.error("Failed to store data in localStorage:", e);
+    }
+  }
+
   const handleFinalize = () => {
+    storeWorkoutDataInLocalStorage(workoutData)
     setFinalizing(true);
     setFinalizedWorkout(workoutData);
   };
@@ -53,7 +73,7 @@ export default function WorkoutPanel({
 
     // Prepare CSV header and rows
     const header = "workoutType,Reps,Weight";
-    const rows = workoutData.map(row => {
+    const rows = workoutData?.map(row => {
       // If already CSV, just return; else, try to join array
       if (typeof row === "string") return row;
       if (Array.isArray(row)) return row.join(",");
@@ -108,9 +128,12 @@ export default function WorkoutPanel({
           aria-modal="true"
           aria-labelledby="workout-panel-title"
         >
-          <div className="panel-header">
+          <div
+            className="panel-header"
+          >
             <h2 id="workout-panel-title">{finalizing ? "Finalize Workout" : "Your Workout"}</h2>
             <button
+
               onClick={() => finalizing ? cancelFinalize() : setPanelOpen(false)}
               className="icon-btn"
               aria-label={finalizing ? "Cancel finalize" : "Close workout panel"}
@@ -125,7 +148,7 @@ export default function WorkoutPanel({
               setShowConfirmDialog={setShowConfirmDialog}
               cancelFinalize={cancelFinalize}
             />
-          ) : workoutData?.length === 0 ? (
+          ) : (workoutData?.length === 0 || !workoutData) ? (
             <div className="empty-workouts">
               <p>No workout data yet</p>
               <p>Record your exercises to see them here</p>
@@ -143,7 +166,7 @@ export default function WorkoutPanel({
                     </tr>
                   </thead>
                   <tbody>
-                    {workoutData.map((entry, idx) => {
+                    {workoutData?.map((entry, idx) => {
                       const parts = entry.split(",");
                       const workoutType = parts[0] || "";
                       const reps = parts[1] || "";

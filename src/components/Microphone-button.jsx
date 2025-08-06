@@ -27,12 +27,12 @@ export default function MicrophoneButton({
     console.log(workoutData)
     if(workoutData === undefined || workoutData === null){
       setWorkoutData([...entries]);
-      storeWorkoutDataInLocalStorage(entries)
+      //storeWorkoutDataInLocalStorage(entries)
 
     }else{
       setWorkoutData(prev => [...prev, ...entries]);
       //update local storage
-      storeWorkoutDataInLocalStorage(entries)
+      //storeWorkoutDataInLocalStorage(entries)
     }
 
 

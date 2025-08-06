@@ -1,8 +1,16 @@
 import React from 'react';
 
 export default function WorkoutFinalizeView({ finalizedWorkout, setShowConfirmDialog, cancelFinalize }) {
+  if (!finalizedWorkout || finalizedWorkout.length === 0) {
+    return (
+      <div className="finalize-no-data">
+        <h1>no data to finalize</h1>
+      </div>
+    );
+  }
   return (
     <div className="finalize-summary">
+     
       <h3>Workout Summary</h3>
       <div className="workout-table-wrapper">
         <table className="workout-table">
@@ -14,7 +22,7 @@ export default function WorkoutFinalizeView({ finalizedWorkout, setShowConfirmDi
             </tr>
           </thead>
           <tbody>
-            {finalizedWorkout.map((entry, idx) => {
+            {finalizedWorkout?.map((entry, idx) => {
               const parts = entry.split(",");
               return (
                 <tr key={idx}>

@@ -6,7 +6,7 @@ import Header from "./Header-";
 import Toast from "./Toast"; 
 import WorkoutPanel from "./WorkoutPanel";
 
-export default function HomePage() {
+export default function HomePage({ workoutData, setWorkoutData }) {
   // UI state
   const [menuOpen, setMenuOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
@@ -21,9 +21,6 @@ export default function HomePage() {
     browserSupportsSpeechRecognition,
     isMicrophoneAvailable
   } = useSpeechRecognition();
-
-  // Workouts list, saved as array of strings (CSV)
-  const [workoutData, setWorkoutData] = useState();
 
   // Toggle dark mode on <html>
   useEffect(() => {

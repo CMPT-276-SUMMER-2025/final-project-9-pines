@@ -23,14 +23,13 @@ export default function HistoryPage() {
       const raw = localStorage.getItem("gymWhisperData");
       if (raw) {
         const data = JSON.parse(raw);
-        // Extract workout data - assuming it's stored as an array of workout entries
+        // Data is stored as an array of arrays: [["PushUp,15,Bodyweight,2025-08-06"]]
         if (Array.isArray(data)) {
-          setWorkoutHistory(data);
-        } else if (data.workouts && Array.isArray(data.workouts)) {
-          setWorkoutHistory(data.workouts);
+          // Flatten the array of arrays into a single array of workout entries
+          const flattenedData = data.flat();
+          setWorkoutHistory(flattenedData);
         } else {
-          // If it's a single workout entry, wrap it in an array
-          setWorkoutHistory([data]);
+          setWorkoutHistory([]);
         }
       } else {
         setWorkoutHistory([]);
