@@ -1,5 +1,13 @@
 import React from 'react';
 
+/**
+ * WorkoutFinalizeView component: Displays workout summary before finalization
+ * 
+ * Props:
+ * - finalizedWorkout: array of workout entries to display
+ * - setShowConfirmDialog: function to show confirmation dialog
+ * - cancelFinalize: function to cancel finalization and return to edit mode
+ */
 export default function WorkoutFinalizeView({ finalizedWorkout, setShowConfirmDialog, cancelFinalize }) {
   if (!finalizedWorkout || finalizedWorkout.length === 0) {
     return (

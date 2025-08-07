@@ -1,6 +1,7 @@
 import React from "react";
 import { Menu } from "lucide-react";
 import { useLanguage } from "../contexts/LanguageContext";
+import LogoBlue from "../assets/logoblue.png";
 
 /**
  * Header component: renders the app title, menu toggle, and language selector.
@@ -11,6 +12,10 @@ import { useLanguage } from "../contexts/LanguageContext";
 export default function Header({ onMenuToggle }) {
   const { language, setLanguage, t } = useLanguage();
 
+  /**
+   * Handles language selection change
+   * @param {Event} event - The change event from the select element
+   */
   const handleLanguageChange = (event) => {
     setLanguage(event.target.value);
   };
@@ -26,8 +31,20 @@ export default function Header({ onMenuToggle }) {
         <Menu size={32} />
       </button>
 
-      {/* App title */}
-      <h1>{t('title')}</h1>
+      {/* App title with logo */}
+      <div className="header-title">
+        <img 
+          src={LogoBlue}
+          alt="Gym Whisper" 
+          className="header-logo"
+          onError={(e) => {
+            // Fallback to text if image fails to load
+            e.target.style.display = 'none';
+            e.target.nextSibling.style.display = 'block';
+          }}
+        />
+        <h1 style={{ display: 'none' }}>{t('title')}</h1>
+      </div>
 
       {/* Language selector */}
       <select 

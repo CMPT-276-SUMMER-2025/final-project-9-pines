@@ -4,9 +4,18 @@ import { Link } from "react-router-dom"; // For navigation
 import ToggleSwitch from "./ToggleSwitch"; // Custom toggle component for dark/light mode
 import { useLanguage } from '../contexts/LanguageContext';
 
-// Sidebar component receives state and toggle functions as props from App.jsx
+/**
+ * Sidebar component: Navigation menu with dark mode toggle
+ * 
+ * Props:
+ * - menuOpen: boolean indicating if sidebar is open
+ * - setMenuOpen: function to open/close sidebar
+ * - isDark: boolean indicating dark mode state
+ * - setIsDark: function to toggle dark mode
+ */
 export default function Sidebar({ menuOpen, setMenuOpen, isDark, setIsDark }) {
   const { t } = useLanguage();
+  
   return (
     // Apply 'open' class when sidebar is active
     <aside className={`sidebar${menuOpen ? " open" : ""}`}>

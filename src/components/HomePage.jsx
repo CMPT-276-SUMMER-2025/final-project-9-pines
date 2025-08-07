@@ -7,11 +7,26 @@ import Toast from "./Toast";
 import WorkoutPanel from "./WorkoutPanel";
 import { useLanguage } from '../contexts/LanguageContext';
 
+/**
+ * HomePage component: Main application interface with voice recording and workout management
+ * 
+ * Props:
+ * - workoutData: array of workout entries
+ * - setWorkoutData: function to update workout data
+ */
 export default function HomePage({ workoutData, setWorkoutData }) {
   const { t } = useLanguage();
+  
   // UI state
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    // Initialize dark mode from localStorage or system preference
+    const saved = localStorage.getItem('darkMode');
+    if (saved !== null) {
+      return JSON.parse(saved);
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
   const [panelOpen, setPanelOpen] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
 
@@ -24,16 +39,21 @@ export default function HomePage({ workoutData, setWorkoutData }) {
     isMicrophoneAvailable
   } = useSpeechRecognition();
 
-  // Toggle dark mode on <html>
+  /**
+   * Toggle dark mode on <html> element and save to localStorage
+   */
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
+    localStorage.setItem('darkMode', JSON.stringify(isDark));
   }, [isDark]);
 
-  // Toast auto-hide
+  /**
+   * Auto-hide toast after 2 seconds
+   */
   useEffect(() => {
     if (toastVisible) {
       const timer = setTimeout(() => setToastVisible(false), 2000);
@@ -41,6 +61,16 @@ export default function HomePage({ workoutData, setWorkoutData }) {
     }
   }, [toastVisible]);
 
+  /**
+   * Handles clicking outside the sidebar to close it
+   */
+  const handleSidebarOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      setMenuOpen(false);
+    }
+  };
+
+  // Handle browser compatibility
   if (!browserSupportsSpeechRecognition) {
     return (
       <div className="app app-center">
@@ -49,6 +79,7 @@ export default function HomePage({ workoutData, setWorkoutData }) {
     );
   }
 
+  // Handle microphone permission
   if (!isMicrophoneAvailable) {
     return (
       <div className="app app-center">
@@ -59,6 +90,15 @@ export default function HomePage({ workoutData, setWorkoutData }) {
 
   return (
     <div className="app">
+      {/* Top gradient overlay */}
+      <div className="top-gradient" />
+
+      {/* Sidebar overlay for click-outside-to-close */}
+      <div 
+        className={`sidebar-overlay${menuOpen ? " open" : ""}`}
+        onClick={handleSidebarOverlayClick}
+      />
+
       {/* Sidebar */}
       <Sidebar
         menuOpen={menuOpen}

@@ -11,9 +11,10 @@ export const translations = {
     closeMenu: "Close menu",
     
     // Main content
-    recordButton: "Record",
+    recordButton: "Tap to record",
     recording: "Recording...",
     stopRecording: "Stop Recording",
+    clickAgainToStop: "Click again to stop recording",
     yourWorkout: "Your Workout",
     noWorkoutData: "No workout data yet",
     recordExercises: "Record your exercises to see them here",
@@ -83,9 +84,10 @@ export const translations = {
     closeMenu: "Fermer le menu",
     
     // Main content
-    recordButton: "Enregistrer",
+    recordButton: "Appuyez pour enregistrer",
     recording: "Enregistrement...",
     stopRecording: "Arrêter l'enregistrement",
+    clickAgainToStop: "Cliquez à nouveau pour arrêter l'enregistrement",
     yourWorkout: "Votre entraînement",
     noWorkoutData: "Aucune donnée d'entraînement pour le moment",
     recordExercises: "Enregistrez vos exercices pour les voir ici",

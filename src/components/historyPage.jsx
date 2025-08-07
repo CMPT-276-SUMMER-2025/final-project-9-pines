@@ -7,17 +7,35 @@ import { useLanguage } from '../contexts/LanguageContext';
 // Import the Gemini summarize API
 import { summarizeWorkoutCSV } from '../llm/gemini';
 
+/**
+ * HistoryPage component: Displays workout history and provides summary functionality
+ * 
+ * Features:
+ * - Loads workout history from localStorage
+ * - Displays workout entries in a table format
+ * - Provides AI-powered workout summary
+ * - Allows CSV export of workout data
+ */
 export default function HistoryPage() {
   const { t } = useLanguage();
   const [menuOpen, setMenuOpen] = React.useState(false);
-  const [isDark, setIsDark] = React.useState(false);
+  const [isDark, setIsDark] = React.useState(() => {
+    // Initialize dark mode from localStorage or system preference
+    const saved = localStorage.getItem('darkMode');
+    if (saved !== null) {
+      return JSON.parse(saved);
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
   const [workoutHistory, setWorkoutHistory] = React.useState([]);
   const [showSummary, setShowSummary] = React.useState(false);
   const [summaryText, setSummaryText] = React.useState('');
   const [loadingSummary, setLoadingSummary] = React.useState(false);
   const [summaryError, setSummaryError] = React.useState('');
 
-  // NEW FUNCTION: downloadCSVWorkoutData - Moved from original App.jsx
+  /**
+   * Generates and triggers download of a CSV file from workout history
+   */
   function downloadCSVWorkoutData(){
     // Generates and triggers download of a CSV file from workoutData
     if (!workoutHistory || workoutHistory.length === 0) {
@@ -49,16 +67,21 @@ export default function HistoryPage() {
     return null
   }
 
-  // Toggle dark mode on <html>
+  /**
+   * Toggle dark mode on <html> element and save to localStorage
+   */
   React.useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
+    localStorage.setItem('darkMode', JSON.stringify(isDark));
   }, [isDark]);
 
-  // Load workout history from localStorage
+  /**
+   * Load workout history from localStorage on component mount
+   */
   React.useEffect(() => {
     try {
       const raw = localStorage.getItem("gymWhisperData");
@@ -81,7 +104,9 @@ export default function HistoryPage() {
     }
   }, []);
 
-  // Handler for summary button
+  /**
+   * Handles the summary button click and generates AI summary
+   */
   async function handleShowSummary() {
     setLoadingSummary(true);
     setSummaryError('');
@@ -116,14 +141,35 @@ export default function HistoryPage() {
     }
   }
 
+  /**
+   * Closes the summary popup and resets state
+   */
   function handleCloseSummary() {
     setShowSummary(false);
     setSummaryText('');
     setSummaryError('');
   }
 
+  /**
+   * Handles clicking outside the sidebar to close it
+   */
+  const handleSidebarOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      setMenuOpen(false);
+    }
+  };
+
   return (
     <div className="app">
+      {/* Top gradient overlay */}
+      <div className="top-gradient" />
+
+      {/* Sidebar overlay for click-outside-to-close */}
+      <div 
+        className={`sidebar-overlay${menuOpen ? " open" : ""}`}
+        onClick={handleSidebarOverlayClick}
+      />
+
       {/* Sidebar */}
       <Sidebar
         menuOpen={menuOpen}
@@ -145,15 +191,6 @@ export default function HistoryPage() {
           {workoutHistory && workoutHistory.length > 0 && (
             <button
               className="summary-btn"
-              style={{
-                marginBottom: "1rem",
-                padding: "0.5rem 1rem",
-                background: "#4f46e5",
-                color: "#fff",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer"
-              }}
               onClick={handleShowSummary}
               disabled={loadingSummary}
               aria-label="Summarize Workout History"
@@ -181,14 +218,12 @@ export default function HistoryPage() {
             >
               <div
                 style={{
-                  background: "#fff",
-                  color: "#222",
-                  borderRadius: "8px",
+                  borderRadius: "16px",
                   padding: "2rem",
                   maxWidth: "90vw",
                   maxHeight: "80vh",
                   overflowY: "auto",
-                  boxShadow: "0 2px 16px rgba(0,0,0,0.2)",
+                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
                   minWidth: "300px"
                 }}
               >
@@ -204,12 +239,11 @@ export default function HistoryPage() {
                   onClick={handleCloseSummary}
                   style={{
                     marginTop: "1.5rem",
-                    padding: "0.5rem 1rem",
-                    background: "#4f46e5",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer"
+                    padding: "12px 24px",
+                    borderRadius: "8px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                    transition: "background-color 0.3s ease"
                   }}
                   aria-label="Close Summary"
                 >

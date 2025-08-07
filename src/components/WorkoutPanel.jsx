@@ -7,6 +7,15 @@ import { ArrowLeft, Trash2, Edit2, Check, X } from "lucide-react";
 import ConfirmationDialog from "./ConfirmationDialog";
 import WorkoutFinalizeView from "./WorkoutFinalizeView";
 
+/**
+ * WorkoutPanel component: displays and manages workout entries
+ * 
+ * Props:
+ * - panelOpen: boolean indicating if panel is open
+ * - setPanelOpen: function to open/close panel
+ * - workoutData: array of workout entries
+ * - setWorkoutData: function to update workout data
+ */
 export default function WorkoutPanel({
   panelOpen,
   setPanelOpen,
@@ -19,16 +28,26 @@ export default function WorkoutPanel({
   const [finalizing, setFinalizing] = useState(false);
   const [finalizedWorkout, setFinalizedWorkout] = useState(null);
 
+  /**
+   * Starts editing a workout entry
+   * @param {number} index - Index of the entry to edit
+   */
   const startEditing = (index) => {
     setEditingIndex(index);
     setEditText(workoutData[index]);
   };
 
+  /**
+   * Cancels the current editing operation
+   */
   const cancelEditing = () => {
     setEditingIndex(null);
     setEditText("");
   };
 
+  /**
+   * Saves the current edit to workout data
+   */
   const saveEditing = () => {
     if (editText.trim() === "") return;
     setWorkoutData((prev) =>
@@ -38,6 +57,10 @@ export default function WorkoutPanel({
     setEditText("");
   };
 
+  /**
+   * Stores workout data in localStorage for persistence
+   * @param {Array} data - Array of workout entries to store
+   */
   function storeWorkoutDataInLocalStorage(data) {
     console.log(data)
     try {
@@ -57,13 +80,18 @@ export default function WorkoutPanel({
     }
   }
 
+  /**
+   * Initiates the workout finalization process
+   */
   const handleFinalize = () => {
     storeWorkoutDataInLocalStorage(workoutData)
     setFinalizing(true);
     setFinalizedWorkout(workoutData);
   };
 
-  // NEW FUNCTION: downloadCSVWorkoutData - Moved from original App.jsx
+  /**
+   * Generates and triggers download of a CSV file from workoutData
+   */
   function downloadCSVWorkoutData(){
     // Generates and triggers download of a CSV file from workoutData
     if (!workoutData || workoutData.length === 0) {
@@ -95,6 +123,9 @@ export default function WorkoutPanel({
     return null
   }
 
+  /**
+   * Confirms the finalization and closes the panel
+   */
   const confirmFinalize = () => {
     setShowConfirmDialog(false);
     setFinalizing(false);
@@ -103,153 +134,184 @@ export default function WorkoutPanel({
     setPanelOpen(false);
   };
 
+  /**
+   * Cancels the finalization process
+   */
   const cancelFinalize = () => {
     setFinalizing(false);
     setFinalizedWorkout(null);
   };
 
+  /**
+   * Removes a workout entry from the list
+   * @param {number} index - Index of the entry to remove
+   */
   const removeEntry = (index) => {
     setWorkoutData((prev) => prev.filter((_, i) => i !== index));
     if (editingIndex === index) cancelEditing();
   };
 
+  /**
+   * Handles clicking outside the panel to close it
+   */
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      if (finalizing) {
+        cancelFinalize();
+      } else {
+        setPanelOpen(false);
+      }
+    }
+  };
+
   return (
     <AnimatePresence>
       {panelOpen && (
-        <motion.div
-          className="panel"
-          initial={{ y: "100%" }}
-          animate={{ y: 0 }}
-          exit={{ y: "100%" }}
-          transition={{ type: "tween", duration: 0.3 }}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="workout-panel-title"
-        >
-          <div
-            className="panel-header"
-          >
-            <h2 id="workout-panel-title">{finalizing ? "Finalize Workout" : "Your Workout"}</h2>
-            <button
-
-              onClick={() => finalizing ? cancelFinalize() : setPanelOpen(false)}
-              className="icon-btn"
-              aria-label={finalizing ? "Cancel finalize" : "Close workout panel"}
-            >
-              <ArrowLeft size={24} className="rotated" />
-            </button>
-          </div>
-
-          {finalizing ? (
-            <WorkoutFinalizeView
-              finalizedWorkout={finalizedWorkout}
-              setShowConfirmDialog={setShowConfirmDialog}
-              cancelFinalize={cancelFinalize}
-            />
-          ) : (workoutData?.length === 0 || !workoutData) ? (
-            <div className="empty-workouts">
-              <p>No workout data yet</p>
-              <p>Record your exercises to see them here</p>
-            </div>
-          ) : (
-            <>
-              <div className="workout-table-wrapper">
-                <table className="workout-table" role="grid" aria-label="Workout entries">
-                  <thead>
-                    <tr>
-                      <th scope="col">WorkoutType</th>
-                      <th scope="col">Reps</th>
-                      <th scope="col">Weight</th>
-                      <th scope="col" aria-label="Actions"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {workoutData?.map((entry, idx) => {
-                      const parts = entry.split(",");
-                      const workoutType = parts[0] || "";
-                      const reps = parts[1] || "";
-                      const weight = parts[2] || "";
-                      const isEditing = editingIndex === idx;
-
-                      return (
-                        <tr key={idx} className={isEditing ? "editing" : ""}>
-                          <td>
-                            {isEditing ? (
-                              <input
-                                type="text"
-                                value={editText}
-                                onChange={(e) => setEditText(e.target.value)}
-                                className="edit-input"
-                                aria-label="Edit workout entry"
-                              />
-                            ) : (
-                              workoutType
-                            )}
-                          </td>
-                          <td>{isEditing ? "" : reps}</td>
-                          <td>{isEditing ? "" : weight}</td>
-                          <td className="actions-cell">
-                            {isEditing ? (
-                              <>
-                                <button
-                                  onClick={saveEditing}
-                                  className="icon-btn action-btn"
-                                  aria-label="Save edit"
-                                  title="Save"
-                                >
-                                  <Check size={20} />
-                                </button>
-                                <button
-                                  onClick={cancelEditing}
-                                  className="icon-btn action-btn"
-                                  aria-label="Cancel edit"
-                                  title="Cancel"
-                                >
-                                  <X size={20} />
-                                </button>
-                              </>
-                            ) : (
-                              <>
-                                <button
-                                  onClick={() => startEditing(idx)}
-                                  className="icon-btn action-btn"
-                                  aria-label={`Edit workout entry ${idx + 1}`}
-                                  title="Edit"
-                                >
-                                  <Edit2 size={20} />
-                                </button>
-                                <button
-                                  onClick={() => removeEntry(idx)}
-                                  className="icon-btn action-btn"
-                                  aria-label={`Delete workout entry ${idx + 1}`}
-                                  title="Delete"
-                                >
-                                  <Trash2 size={20} />
-                                </button>
-                              </>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-              <div className="finalize-button-container">
-                <button onClick={handleFinalize} className="workout-btn">
-                  Finalize Workout
-                </button>
-              </div>
-            </>
-          )}
-
-          <ConfirmationDialog
-            isOpen={showConfirmDialog}
-            onConfirm={confirmFinalize}
-            onCancel={() => setShowConfirmDialog(false)}
-            message="Are you sure you want to export your workout? This action cannot be undone and your current workout will be erased."
+        <>
+          {/* Overlay for clicking outside to close */}
+          <motion.div
+            className="panel-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={handleOverlayClick}
           />
-        </motion.div>
+          
+          <motion.div
+            className="panel"
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ type: "tween", duration: 0.3 }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="workout-panel-title"
+          >
+            <div
+              className="panel-header"
+            >
+              <h2 id="workout-panel-title">{finalizing ? "Finalize Workout" : "Your Workout"}</h2>
+              <button
+                onClick={() => finalizing ? cancelFinalize() : setPanelOpen(false)}
+                className="icon-btn"
+                aria-label={finalizing ? "Cancel finalize" : "Close workout panel"}
+              >
+                <ArrowLeft size={24} className="rotated" />
+              </button>
+            </div>
+
+            {finalizing ? (
+              <WorkoutFinalizeView
+                finalizedWorkout={finalizedWorkout}
+                setShowConfirmDialog={setShowConfirmDialog}
+                cancelFinalize={cancelFinalize}
+              />
+            ) : (workoutData?.length === 0 || !workoutData) ? (
+              <div className="empty-workouts">
+                <p>No workout data yet</p>
+                <p>Record your exercises to see them here</p>
+              </div>
+            ) : (
+              <>
+                <div className="workout-table-wrapper">
+                  <table className="workout-table" role="grid" aria-label="Workout entries">
+                    <thead>
+                      <tr>
+                        <th scope="col">WorkoutType</th>
+                        <th scope="col">Reps</th>
+                        <th scope="col">Weight</th>
+                        <th scope="col" aria-label="Actions"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {workoutData?.map((entry, idx) => {
+                        const parts = entry.split(",");
+                        const workoutType = parts[0] || "";
+                        const reps = parts[1] || "";
+                        const weight = parts[2] || "";
+                        const isEditing = editingIndex === idx;
+
+                        return (
+                          <tr key={idx} className={isEditing ? "editing" : ""}>
+                            <td>
+                              {isEditing ? (
+                                <input
+                                  type="text"
+                                  value={editText}
+                                  onChange={(e) => setEditText(e.target.value)}
+                                  className="edit-input"
+                                  aria-label="Edit workout entry"
+                                />
+                              ) : (
+                                workoutType
+                              )}
+                            </td>
+                            <td>{isEditing ? "" : reps}</td>
+                            <td>{isEditing ? "" : weight}</td>
+                            <td className="actions-cell">
+                              {isEditing ? (
+                                <>
+                                  <button
+                                    onClick={saveEditing}
+                                    className="icon-btn action-btn"
+                                    aria-label="Save edit"
+                                    title="Save"
+                                  >
+                                    <Check size={20} />
+                                  </button>
+                                  <button
+                                    onClick={cancelEditing}
+                                    className="icon-btn action-btn"
+                                    aria-label="Cancel edit"
+                                    title="Cancel"
+                                  >
+                                    <X size={20} />
+                                  </button>
+                                </>
+                              ) : (
+                                <>
+                                  <button
+                                    onClick={() => startEditing(idx)}
+                                    className="icon-btn action-btn"
+                                    aria-label={`Edit workout entry ${idx + 1}`}
+                                    title="Edit"
+                                  >
+                                    <Edit2 size={20} />
+                                  </button>
+                                  <button
+                                    onClick={() => removeEntry(idx)}
+                                    className="icon-btn action-btn"
+                                    aria-label={`Delete workout entry ${idx + 1}`}
+                                    title="Delete"
+                                  >
+                                    <Trash2 size={20} />
+                                  </button>
+                                </>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="finalize-button-container">
+                  <button onClick={handleFinalize} className="workout-btn">
+                    Finalize Workout
+                  </button>
+                </div>
+              </>
+            )}
+
+            <ConfirmationDialog
+              isOpen={showConfirmDialog}
+              onConfirm={confirmFinalize}
+              onCancel={() => setShowConfirmDialog(false)}
+              message="Are you sure you want to export your workout? This action cannot be undone and your current workout will be erased."
+            />
+          </motion.div>
+        </>
       )}
     </AnimatePresence>
   );

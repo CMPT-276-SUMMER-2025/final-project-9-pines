@@ -1,6 +1,15 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+/**
+ * ConfirmationDialog component: Modal dialog for confirming important actions
+ * 
+ * Props:
+ * - isOpen: boolean controlling dialog visibility
+ * - onConfirm: function called when user confirms action
+ * - onCancel: function called when user cancels action
+ * - message: string message to display in the dialog
+ */
 export default function ConfirmationDialog({ isOpen, onConfirm, onCancel, message }) {
   return (
     <AnimatePresence>
