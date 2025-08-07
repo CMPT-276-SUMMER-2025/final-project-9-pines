@@ -1,0 +1,36 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#1f2937"/>
+  
+  <!-- Gradient overlay -->
+  <rect width="1200" height="630" fill="url(#gradient)"/>
+  
+  <!-- Logo area -->
+  <circle cx="300" cy="315" r="80" fill="#6366f1"/>
+  <path d="M300 235C278.954 235 262 251.954 262 273V357C262 378.046 278.954 395 300 395C321.046 395 338 378.046 338 357V273C338 251.954 321.046 235 300 235Z" fill="white"/>
+  <path d="M380 357C380 401.183 344.183 437 300 437C255.817 437 220 401.183 220 357H240C240 390.137 266.863 417 300 417C333.137 417 360 390.137 360 357H380Z" fill="white"/>
+  <path d="M300 485V525" stroke="white" stroke-width="4" stroke-linecap="round"/>
+  <path d="M260 525H340" stroke="white" stroke-width="4" stroke-linecap="round"/>
+  
+  <!-- Text -->
+  <text x="450" y="280" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="white">GymWhisper</text>
+  <text x="450" y="340" font-family="Arial, sans-serif" font-size="32" fill="#d1d5db">Track your workouts with AI</text>
+  <text x="450" y="380" font-family="Arial, sans-serif" font-size="24" fill="#9ca3af">Voice-powered fitness tracking</text>
+  
+  <!-- Features -->
+  <text x="450" y="450" font-family="Arial, sans-serif" font-size="20" fill="#6366f1">🎤 Voice Recognition</text>
+  <text x="450" y="480" font-family="Arial, sans-serif" font-size="20" fill="#6366f1">🤖 AI-Powered</text>
+  <text x="450" y="510" font-family="Arial, sans-serif" font-size="20" fill="#6366f1">📊 Workout History</text>
+  
+  <!-- Decorative elements -->
+  <circle cx="1000" cy="150" r="40" fill="#6366f1" opacity="0.3"/>
+  <circle cx="1100" cy="480" r="30" fill="#6366f1" opacity="0.2"/>
+  <circle cx="950" cy="550" r="25" fill="#6366f1" opacity="0.4"/>
+  
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1f2937;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#374151;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+</svg> 

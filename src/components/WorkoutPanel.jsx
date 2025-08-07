@@ -158,17 +158,20 @@ export default function WorkoutPanel({
   };
 
   /**
-   * Removes the NeedsReview flag from a workout entry
-   * @param {number} index - Index of the entry to approve
-   */
+   /**
+    * Removes the NeedsReview flag from a workout entry
+    * @param {number} index - Index of the entry to approve
+    */
   const approveEntry = (index) => {
-    setWorkoutData((prev) => 
+    setWorkoutData((prev) =>
       prev.map((entry, i) => {
         if (i === index) {
-          // Remove the NeedsReview flag from the CSV string
+          // Remove the NeedsReview flag from the CSV string, but keep the date (if present)
           const parts = entry.split(',');
+          // If NeedsReview is present as the 4th part, and there is a 5th part (date)
           if (parts[3] === 'NeedsReview') {
-            return parts.slice(0, 3).join(',');
+            // Remove the 4th part (NeedsReview), keep the rest
+            return [parts[0], parts[1], parts[2], ...(parts.length > 4 ? [parts[4]] : [])].join(',');
           }
         }
         return entry;
@@ -290,7 +293,12 @@ export default function WorkoutPanel({
         
                                   </div>
                                   <button
-                                    onClick={() => approveEntry(idx)}
+                                    onClick={() => {
+                                      
+                                      approveEntry(idx);
+                                      console.log(workoutData);
+          
+                                    }}
                                     style={{backgroundColor: 'green', color: 'white', borderRadius: '5px', padding: '8px 10px', fontSize: '14px', borderWidth: '0px'}}
                                     aria-label="Approve this entry"
                                     title="Approve entry"
