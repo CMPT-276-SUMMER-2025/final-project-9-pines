@@ -8,30 +8,44 @@ if (!apiKey) {
 const ai = new GoogleGenAI({ apiKey });
 const csvDataPrompt = `You are part of a workout tracking application. 
 You will only reply with CSV data values.
-Extract the following data from the user's workout description in this format: workoutType,Reps,Weight
+Extract the following data from the user's workout description in this format: workoutType,Reps,Weight[,NeedsReview]
+
+IMPORTANT: If the exercise seems unusual, unrealistic, or outside normal human capabilities (e.g., extremely high reps, unrealistic weights, impossible exercises), add "NeedsReview" as the fourth field.
 
 Example 1:
 "Just did a set of benchpress, 9 reps with a plate on each side"
 
----Reasoning---: A plate is 45lbs and the standard bar weight is 45lbs, so the weight is 2 x 45lbs plate + 1 x 45lbs bar = 135 lbs
+---Reasoning---: A plate is 45lbs and the standard bar weight is 45lbs, so the weight is 2 x 45lbs plate + 1 x 45lbs bar = 135 lbs. This is a normal, realistic workout.
 Output: BenchPress,9,135lbs
 
 Example 2:
 "6 reps of lateral raises with 20lbs dumbbells"
 
----Reasoning---: For the workout type of lateral raises, we set the weight to 20lbs, because this is what the user has in each hand.
+---Reasoning---: For the workout type of lateral raises, we set the weight to 20lbs, because this is what the user has in each hand. This is a normal, realistic workout.
 Output: LateralRaise,6,20lbs
 
 Example 3:
-"I just did my benchpress workout, it consited of 3 sets of a plate and 1 set of just 25lbs, first set I did 10 reps, second set I did 9, third did 8. And the 4th with 25lbs I did 12reps"
+"I did 4000 pushups with 1000lbs on my back"
 
---Reasoning:--: The input describes multiple workout sets in one prompt, so we need to output multiple lines of csv data. Using the same reasoning for the above examples we got the following output:
-BenchPress,10,135lbs;BenchPress,9,135lbs;BenchPress,8,135lbs;BenchPress,12,95lbs
+---Reasoning---: 4000 pushups with 1000lbs is extremely unrealistic and outside normal human capabilities. This needs review.
+Output: PushUps,4000,1000lbs,NeedsReview
 
-Example 4: "I did 3 sets of lat pull downs with 110lbs,10reps then 9 and 8. And 4 sets of pushups 10 reps, 9 and 7"
---Reasoning--: Same reasoning as above examples
+Example 4:
+"I just did my benchpress workout, it consisted of 3 sets of a plate and 1 set of just 25lbs, first set I did 10 reps, second set I did 9, third did 8. And the 4th with 25lbs I did 12reps"
+
+--Reasoning:--: The input describes multiple workout sets in one prompt, so we need to output multiple lines of csv data. All sets are realistic.
+Output: BenchPress,10,135lbs;BenchPress,9,135lbs;BenchPress,8,135lbs;BenchPress,12,95lbs
+
+Example 5: "I did 3 sets of lat pull downs with 110lbs,10reps then 9 and 8. And 4 sets of pushups 10 reps, 9 and 7"
+--Reasoning--: All sets are realistic and normal.
 
 Output: "LatPullDown,10,110lbs;LatPullDown,9,110lbs;LatPullDown,8,110lbs;PushUps,10,Bodyweight;PushUps,9,Bodyweight;PushUps,7,Bodyweight;"
+
+Example 6:
+"I did 5000 squats with 2000lbs"
+
+---Reasoning---: 5000 squats with 2000lbs is extremely unrealistic and impossible for any human.
+Output: Squats,5000,2000lbs,NeedsReview
 
 Now complete the following example:
 

@@ -152,25 +152,25 @@ html.dark .app::before {
   left: 0;
   width: 100%;
   height: 400px;
-  background: linear-gradient(to bottom, 
-    var(--color-bg) 0%, 
-    rgba(248, 250, 252, 0.9) 20%, 
-    rgba(248, 250, 252, 0.7) 40%,
-    rgba(248, 250, 252, 0.4) 60%,
-    rgba(248, 250, 252, 0.2) 80%,
-    transparent 100%);
+  background: linear-gradient(to bottom,
+      var(--color-bg) 0%,
+      rgba(248, 250, 252, 0.9) 20%,
+      rgba(248, 250, 252, 0.7) 40%,
+      rgba(248, 250, 252, 0.4) 60%,
+      rgba(248, 250, 252, 0.2) 80%,
+      transparent 100%);
   z-index: 1;
   pointer-events: none;
 }
 
 html.dark .app::after {
-  background: linear-gradient(to bottom, 
-    var(--color-bg) 0%, 
-    rgba(15, 23, 42, 0.9) 20%, 
-    rgba(15, 23, 42, 0.7) 40%,
-    rgba(15, 23, 42, 0.4) 60%,
-    rgba(15, 23, 42, 0.2) 80%,
-    transparent 100%);
+  background: linear-gradient(to bottom,
+      var(--color-bg) 0%,
+      rgba(15, 23, 42, 0.9) 20%,
+      rgba(15, 23, 42, 0.7) 40%,
+      rgba(15, 23, 42, 0.4) 60%,
+      rgba(15, 23, 42, 0.2) 80%,
+      transparent 100%);
 }
 
 
@@ -182,23 +182,23 @@ html.dark .app::after {
   left: 0;
   width: 100%;
   height: 100px;
-  background: linear-gradient(to bottom, 
-    var(--color-bg) 0%, 
-    rgba(248, 250, 252, 0.9) 30%, 
-    rgba(248, 250, 252, 0.7) 60%,
-    rgba(248, 250, 252, 0.4) 80%,
-    transparent 100%);
+  background: linear-gradient(to bottom,
+      var(--color-bg) 0%,
+      rgba(248, 250, 252, 0.9) 30%,
+      rgba(248, 250, 252, 0.7) 60%,
+      rgba(248, 250, 252, 0.4) 80%,
+      transparent 100%);
   z-index: 1;
   pointer-events: none;
 }
 
 html.dark .app .top-gradient {
-  background: linear-gradient(to bottom, 
-    var(--color-bg) 0%, 
-    rgba(15, 23, 42, 0.9) 30%, 
-    rgba(15, 23, 42, 0.7) 60%,
-    rgba(15, 23, 42, 0.4) 80%,
-    transparent 100%);
+  background: linear-gradient(to bottom,
+      var(--color-bg) 0%,
+      rgba(15, 23, 42, 0.9) 30%,
+      rgba(15, 23, 42, 0.7) 60%,
+      rgba(15, 23, 42, 0.4) 80%,
+      transparent 100%);
 }
 
 /* Sidebar overlay for click-outside-to-close */
@@ -538,6 +538,7 @@ html.dark .lang-select:focus-visible {
   0%, 80%, 100% {
     transform: scale(0);
   }
+
   40% {
     transform: scale(1);
   }
@@ -955,6 +956,45 @@ html.dark .action-btn:focus-visible {
   color: white;
 }
 
+/* Needs Review Styling */
+.review-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ff9800;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin: 4px 0;
+}
+
+.review-warning {
+  color: #fff !important;
+  font-weight: 600;
+  font-style: italic;
+  font-size: 14px;
+  margin: 0;
+}
+
+.approve-btn {
+  background: #4caf50;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: white;
+}
+
+.approve-btn:hover {
+  background: #45a049;
+}
+
+
+
 /* History Page Styles */
 .history-container {
   max-width: 1000px;
@@ -1147,6 +1187,7 @@ html.dark .summary-btn:hover {
   0%, 100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }

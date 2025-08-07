@@ -187,17 +187,7 @@ export default function HistoryPage() {
           <h1>{t('workoutHistory')}</h1>
           <p>{t('viewPastSessions')}</p>
           
-          {/* Show summary button if there is workout history */}
-          {workoutHistory && workoutHistory.length > 0 && (
-            <button
-              className="summary-btn"
-              onClick={handleShowSummary}
-              disabled={loadingSummary}
-              aria-label="Summarize Workout History"
-            >
-              {loadingSummary ? "Summarizing..." : t('summarizeWorkoutHistory')}
-            </button>
-          )}
+        
 
           {/* Summary popup/modal */}
           {showSummary && (
@@ -307,10 +297,23 @@ export default function HistoryPage() {
               </table>
             </div>
           )}
-          
-          <Link to="/" className="back-btn">
-            {t('backToHome')}
-          </Link>
+            
+              <Link to="/" className="back-btn" style={{ flexShrink: 0 }}>
+                {t('backToHome')}
+              </Link>
+
+              {/* Show summary button and back link side by side */}
+              {workoutHistory && workoutHistory.length > 0 && (
+                <button
+                  className="summary-btn"
+                  onClick={handleShowSummary}
+                  disabled={loadingSummary}
+                  aria-label="Summarize Workout History"
+                  style={{marginLeft: "10%"}}
+                >
+                  {loadingSummary ? "Summarizing..." : t('summarizeWorkoutHistory')}
+                </button>
+              )}
         </div>
       </main>
     </div>

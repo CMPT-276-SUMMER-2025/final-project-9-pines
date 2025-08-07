@@ -39,6 +39,9 @@ export const translations = {
     delete: "Delete",
     save: "Save",
     cancel: "Cancel",
+    needsReview: "Are you sure this is correct?",
+    approveEntry: "Approve entry",
+    reviewRequired: "Please review and approve all flagged entries before finalizing your workout.",
     
     // Confirmation Dialog
     confirmFinalize: "Are you sure you want to export your workout? This action cannot be undone and your current workout will be erased.",
@@ -112,6 +115,9 @@ export const translations = {
     delete: "Supprimer",
     save: "Enregistrer",
     cancel: "Annuler",
+    needsReview: "Êtes-vous sûr que c'est correct ?",
+    approveEntry: "Approuver l'entrée",
+    reviewRequired: "Veuillez examiner et approuver toutes les entrées marquées avant de finaliser votre entraînement.",
     
     // Confirmation Dialog
     confirmFinalize: "Êtes-vous sûr de vouloir exporter votre entraînement ? Cette action ne peut pas être annulée et votre entraînement actuel sera effacé.",
