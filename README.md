@@ -1,14 +1,62 @@
 # Gym Whisper
 
-## M0 AI Disclosure forms are in the docs
-[The AI Disclosure forms are here](docs/)
+## Local Deployment Instructions
 
-## Group members
- - Parminder Randhawa, Developer & Designer
- - Nikolay Deineg, Developer & Designero 
- - Ilian Khankhalaev, Developer & Researcher
- - Sven Jensen, Developer & PM
+Follow the steps below to run the application locally on your machine.
 
-## Description
-### The Speech to workout logs web application allows gym goers to talk to their phones about their workout and let the application
-do the rest of the work. The application extracts the workout data and formats it for the user directly from an audio input. Leveraging modern LLM technology and Agentic Workflows.
+### Prerequisites
+
+- Node.js
+- npm (comes with Node.js)
+- Git
+- A Gemini API key (via Google AI Studio)
+
+### Step 1 – Clone the Repository
+
+```bash
+git clone https://github.com/CMPT-276-SUMMER-2025/final-project-9-pines.git
+
+```
+
+
+### Step 2 - Navigate to the Project Folder
+
+```bash
+
+cd YOUR_REPOSITORY_NAME
+
+
+```
+
+### Step 3 – Install Dependencies
+
+```bash
+
+npm install
+
+```
+### Step 4 – Set Up Environment Variables
+In the root directory of the project, create a file called .env
+
+
+Inside the .env file, add the following line:
+
+```bash
+REACT_APP_GEMINI_API_KEY=your_actual_gemini_api_key_here
+
+```
+Make sure this .env file is not committed to GitHub (It contains sensitive keys).
+
+
+### Step 5 – Start the Development Server
+
+```bash
+npm start
+
+```
+  This will launch the application on http://localhost:3000
+
+#Project Links:
+- Live Website:
+- Final Report: 
+- GitHub Repo: https://github.com/CMPT-276-SUMMER-2025/final-project-9-pines.git
