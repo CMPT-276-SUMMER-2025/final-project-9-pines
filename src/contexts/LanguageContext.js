@@ -46,17 +46,17 @@ export const useLanguage = () => {
 export const LanguageProvider = ({ children }) => {
   // Initialize language from localStorage or default to English
   const [language, setLanguage] = useState(() => {
-    const savedLanguage = localStorage.getItem('language');
+    const savedLanguage = localStorage.getItem('appLanguage');
     return savedLanguage || 'en';
   });
 
   // Save language preference to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('language', language);
+    localStorage.setItem('appLanguage', language);
   }, [language]);
 
   // Translation function that returns text in the current language
-  const t = (key) => getTranslation(language, key);
+  const t = (key) => getTranslation(key, language);
 
   // Toggle between English and French
   const toggleLanguage = () => {
