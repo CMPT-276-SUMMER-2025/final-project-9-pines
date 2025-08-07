@@ -52,29 +52,6 @@ export default function MicrophoneButton({
     }
   }
 
-  // /**
-  //  * Stores workout data in localStorage for persistence
-  //  * @param {Array} data - Array of workout entries to store
-  //  */
-  // function storeWorkoutDataInLocalStorage(data) {
-  //   console.log(data);
-  //   try {
-  //     const currentDataInLocalStorage = localStorage.getItem('gymWhisperData');
-  //     if(currentDataInLocalStorage === null){
-  //       const jsonString = JSON.stringify([data]);
-  //       localStorage.setItem('gymWhisperData', jsonString);
-  //       return;
-  //     }
-  //     const currentData = JSON.parse(currentDataInLocalStorage);
-  //     console.log(currentData);
-  //     const newData = [...currentData, ...data];
-  //     const jsonString = JSON.stringify(newData);
-  //     localStorage.setItem('gymWhisperData', jsonString);
-  //   } catch (e) {
-  //     console.error('Failed to store data in localStorage:', e);
-  //   }
-  // }
-  
   /**
    * Handles recording toggle - starts or stops voice recording
    */
