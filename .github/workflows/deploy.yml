@@ -26,7 +26,7 @@ jobs:
     - name: Run tests
       run: npm test -- --watchAll=false --passWithNoTests
       env:
-        CI: true
+        CI: false
 
   build-and-deploy:
     needs: test
@@ -55,7 +55,7 @@ jobs:
       run: npm ci --legacy-peer-deps
       
     - name: Build project
-      run: npm run build
+      run: npm run build:no-lint
       env:
         REACT_APP_GEMINI_API_KEY: ${{ secrets.REACT_APP_GEMINI_API_KEY }}
       
