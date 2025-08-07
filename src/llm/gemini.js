@@ -38,10 +38,73 @@ Now complete the following example:
 
 `;
 
-export async function callGeminiAPI(text) {
+
+// Prompt for summarizing workout CSV data
+const csvSummaryPrompt = `You are a helpful assistant for a workout tracking application.
+You will be given a list of workout entries in CSV format, where each entry is in the form: workoutType,Reps,Weight[,Date].
+Your job is to summarize the user's workout history in a concise, human-readable way.
+Highlight the most common workout types, total sets, average reps, and any notable trends or achievements.
+Do not include the raw CSV data in your response. Be brief and informative.
+
+Example input:
+BenchPress,10,135lbs
+BenchPress,9,135lbs
+PushUps,15,Bodyweight
+PushUps,12,Bodyweight
+
+Example output:
+You performed mostly BenchPress and PushUps. For BenchPress, you completed 2 sets averaging 9.5 reps at 135lbs. For PushUps, you did 2 sets averaging 13.5 reps. Great consistency!
+
+Now summarize the following workout data:
+`;
+
+/**
+ * Summarizes workout CSV data using Gemini API.
+ * @param {Array<string>} workoutData - Array of CSV strings, e.g. ["BenchPress,10,135lbs", ...]
+ * @param {string} language - Language code, e.g. 'en' or 'fr'. Defaults to 'en'.
+ * @returns {Promise<{summary: string}|{error: string, status: number}>}
+ */
+export async function summarizeWorkoutCSV(workoutData, language = 'en') {
+  try {
+    if (!Array.isArray(workoutData) || workoutData.length === 0) {
+      return { error: "Missing or invalid 'workoutData' parameter.", status: 400 };
+    }
+    // Join the CSV entries with newlines for clarity
+    const csvString = workoutData.join('\n');
+    // Add language-specific instruction to the prompt
+    const languageInstruction = language === 'fr' ? '\n\nIMPORTANT: Reply in French.' : '';
+    const prompt = csvSummaryPrompt + languageInstruction + '\n' + csvString;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+      config: {
+        thinkingConfig: {
+          thinkingBudget: 0,
+          temperature: 0
+        },
+      }
+    });
+
+    let summaryText = response?.text;
+    if (!summaryText && response?.candidates?.[0]?.content?.parts?.[0]?.text) {
+      summaryText = response.candidates[0].content.parts[0].text;
+    }
+
+    return { summary: summaryText };
+  } catch (error) {
+    return { error: error?.message || "Internal Server Error", status: 500 };
+  }
+}
+
+
+
+export async function callGeminiAPI(text, language = 'en') {
   try {
     
-    const prompt = csvDataPrompt + text
+    // Add language-specific instruction to the prompt
+    const languageInstruction = language === 'fr' ? '\n\nIMPORTANT: Reply in French.' : '';
+    const prompt = csvDataPrompt + languageInstruction + '\n\n' + text;
 
     if (typeof text !== "string" || !text.trim()) {
       return { error: "Missing or invalid 'text' parameter.", status: 400 };

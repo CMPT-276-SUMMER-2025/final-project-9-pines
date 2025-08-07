@@ -5,8 +5,10 @@ import MicrophoneButton from "./Microphone-button";
 import Header from "./Header-";
 import Toast from "./Toast"; 
 import WorkoutPanel from "./WorkoutPanel";
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function HomePage({ workoutData, setWorkoutData }) {
+  const { t } = useLanguage();
   // UI state
   const [menuOpen, setMenuOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
@@ -42,7 +44,7 @@ export default function HomePage({ workoutData, setWorkoutData }) {
   if (!browserSupportsSpeechRecognition) {
     return (
       <div className="app app-center">
-        <h1>Your browser does not support speech recognition</h1>
+        <h1>{t('browserNotSupported')}</h1>
       </div>
     );
   }
@@ -50,7 +52,7 @@ export default function HomePage({ workoutData, setWorkoutData }) {
   if (!isMicrophoneAvailable) {
     return (
       <div className="app app-center">
-        <h1>Please give microphone permission</h1>
+        <h1>{t('microphonePermission')}</h1>
       </div>
     );
   }
@@ -88,12 +90,12 @@ export default function HomePage({ workoutData, setWorkoutData }) {
           className="workout-btn"
           aria-haspopup="dialog"
         >
-          Your Workout
+          {t('yourWorkout')}
         </button>
       </main>
 
       {/* Toast */}
-      <Toast toastVisible={toastVisible} message="Added to your workout!" />
+      <Toast toastVisible={toastVisible} message={t('addedToWorkout')} />
 
       {/* Workout Panel */}
       <WorkoutPanel

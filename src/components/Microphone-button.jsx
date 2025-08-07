@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { callGeminiAPI } from '../llm/gemini';
 import MicrophoneIcon from '../assets/purplemic.png';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function MicrophoneButton({
   workoutData,
@@ -13,6 +14,7 @@ export default function MicrophoneButton({
   startListening,  
   stopListening    
 }) {
+  const { language, t } = useLanguage();
 
   function updateWorkoutData(csvString){
     if (!csvString || typeof csvString !== "string") return;
@@ -61,14 +63,19 @@ export default function MicrophoneButton({
   const handleRecordToggle = async () => {
     if (!listening) {
       resetTranscript();
-      startListening({ continuous: true }); 
+      // Set language for speech recognition
+      const speechConfig = { 
+        continuous: true,
+        language: language === 'fr' ? 'fr-FR' : 'en-US'
+      };
+      startListening(speechConfig); 
     } else {
       stopListening(); 
       if(transcript === ""){
         return
       }
       try {
-        const response = await callGeminiAPI(transcript);
+        const response = await callGeminiAPI(transcript, language);
 
         updateWorkoutData(response.result); 
 
@@ -102,10 +109,10 @@ export default function MicrophoneButton({
         {listening ? (
           <>
             <span className="record-dot" aria-hidden="true">●</span>
-            {transcript || "Listening..."} {/* Using the passed prop */}
+            {transcript || t('recording')}
           </>
         ) : (
-          "Tap to record"
+          t('recordButton')
         )}
       </p>
     </>

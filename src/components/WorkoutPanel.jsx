@@ -97,8 +97,6 @@ export default function WorkoutPanel({
 
   const confirmFinalize = () => {
     setShowConfirmDialog(false);
-    alert("Workout finalized! Ready to save as CSV"); // Updated alert message
-    downloadCSVWorkoutData(); // CALL THE NEWLY MOVED FUNCTION HERE
     setFinalizing(false);
     setFinalizedWorkout(null);
     setWorkoutData([]);
