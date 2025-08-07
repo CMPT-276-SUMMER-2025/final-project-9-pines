@@ -54,6 +54,8 @@ body {
   --color-text-secondary: #64748b;
   --color-accent: #2563eb;
   /* Blue-600 for hover states */
+  --color-accent-hover: #1d4ed8;
+  --color-primary-hover: #1d4ed8;
   --color-blue-100: #dbeafe;
   --color-blue-200: #bfdbfe;
   --color-blue-300: #93c5fd;
@@ -90,6 +92,8 @@ html.dark {
   --color-text-secondary: #94a3b8;
   --color-accent: #93c5fd;
   /* Blue-300 for hover states in dark mode */
+  --color-accent-hover: #60a5fa;
+  --color-primary-hover: #60a5fa;
   --color-blue-100: #2563eb;
   --color-blue-200: #3b82f6;
   --color-blue-300: #60a5fa;
@@ -753,7 +757,6 @@ html.dark .workout-btn:focus-visible {
   flex-direction: column;
   z-index: 100;
   transition: background-color 0.3s ease;
-  background-image: url('../assets/background_2.PNG');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -818,6 +821,7 @@ html.dark .panel {
   width: 100%;
   border-collapse: collapse;
   font-size: 17px;
+  table-layout: fixed;
 }
 
 .workout-table th,
@@ -828,6 +832,27 @@ html.dark .panel {
   vertical-align: middle;
   color: var(--color-text);
   transition: background-color 0.3s ease;
+}
+
+/* Column width controls for history table */
+.workout-table th:nth-child(1),
+.workout-table td:nth-child(1) {
+  width: 15%;
+}
+
+.workout-table th:nth-child(2),
+.workout-table td:nth-child(2) {
+  width: 15%;
+}
+
+.workout-table th:nth-child(3),
+.workout-table td:nth-child(3) {
+  width: 20%;
+}
+
+.workout-table th:nth-child(4),
+.workout-table td:nth-child(4) {
+  width: 50%;
 }
 
 .workout-table th {
@@ -852,6 +877,163 @@ html.dark .workout-table tbody tr:hover {
   display: flex;
   gap: 12px;
   justify-content: flex-end;
+}
+
+/* Date Header Row */
+.date-header-row {
+  background-color: var(--color-accent);
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.date-header-row:hover {
+  background-color: var(--color-accent-hover);
+}
+
+.date-header {
+  font-weight: 700;
+  font-size: 16px;
+  padding: 16px 18px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--color-accent) !important;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-content svg {
+  transition: transform 0.2s ease;
+}
+
+/* Time Header Row */
+.time-header-row {
+  background-color: var(--color-primary);
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.time-header-row:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.time-header {
+  font-weight: 600;
+  font-size: 16px;
+  padding: 12px 18px !important;
+  letter-spacing: 0.03em;
+  border-bottom: 1px solid var(--color-primary) !important;
+}
+
+/* Exercise Header Row */
+.exercise-header-row {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.exercise-name-header {
+  font-weight: 700;
+  font-size: 14px;
+  padding: 12px 18px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--color-primary) !important;
+}
+
+/* Set Row */
+.set-row {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.set-row:hover {
+  background-color: var(--color-blue-100);
+}
+
+html.dark .set-row:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.set-info-cell {
+  padding: 12px 18px;
+  vertical-align: middle;
+  width: 100%;
+  min-width: 200px;
+  max-width: none;
+}
+
+.set-info-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  /* Allow container to shrink */
+  flex: 1;
+  /* Take available space */
+  width: 100%;
+  max-width: none;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .set-info-container {
+    gap: 12px;
+    /* More space between elements */
+    flex-wrap: wrap;
+    /* Allow wrapping if needed */
+  }
+
+  .set-info {
+    font-size: 16px;
+    /* Slightly larger text on mobile */
+    min-width: 80px;
+    /* Ensure minimum width for readability */
+  }
+
+  .review-section {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .review-warning {
+    font-size: 14px;
+  }
+
+  /* Make action buttons slightly larger on mobile */
+  .action-btn {
+    padding: 8px;
+    min-width: 44px;
+    /* Touch-friendly minimum size */
+    min-height: 44px;
+  }
+
+  /* Adjust table cell padding for mobile */
+  .set-info-cell {
+    padding: 16px 12px;
+  }
+
+  .actions-cell {
+    gap: 8px;
+    padding-right: 12px;
+  }
+}
+
+.set-info {
+  font-size: 15px;
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+html.dark .exercise-name-header {
+  color: white;
+}
+
+html.dark .set-info {
+  color: var(--color-text);
 }
 
 /* Buttons inside workout table */

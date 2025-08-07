@@ -62,6 +62,71 @@ export default function HomePage({ workoutData, setWorkoutData }) {
   }, [toastVisible]);
 
   /**
+   * Clean up old data formats in localStorage
+   * This function checks for and removes old gymWhisperData formats
+   */
+  const cleanupOldDataFormats = () => {
+    try {
+      const raw = localStorage.getItem('gymWhisperData');
+      if (!raw) return; // No data to clean up
+      
+      const data = JSON.parse(raw);
+      if (!Array.isArray(data)) return; // Not an array, skip
+      
+      let needsCleanup = false;
+      let hasNewFormat = false;
+      
+      // Check if any entries are in the old format
+      data.forEach((item, index) => {
+        if (Array.isArray(item)) {
+          // Check if this is the new format [datetime, [workoutEntries]]
+          if (item.length === 2 && typeof item[0] === 'string' && Array.isArray(item[1])) {
+            hasNewFormat = true;
+            return;
+          }
+          
+          // Check if this is the old format with datetime in each entry
+          const firstEntry = item[0];
+          if (typeof firstEntry === 'string') {
+            const parts = firstEntry.split(',');
+            // Old format: entries have 4+ parts with datetime at the end
+            if (parts.length >= 4) {
+              const lastPart = parts[parts.length - 1];
+              // Check if last part looks like a datetime (YYYY-MM-DD HH:MM)
+              if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(lastPart)) {
+                needsCleanup = true;
+                console.log('Found old data format, will clean up');
+              }
+            }
+          }
+        }
+      });
+      
+      // If we found old format data, remove it
+      if (needsCleanup) {
+        console.log('Cleaning up old gymWhisperData format...');
+        localStorage.removeItem('gymWhisperData');
+        console.log('Old gymWhisperData removed. Users will start fresh with new format.');
+      }
+      
+      // If we have new format data, log it
+      if (hasNewFormat) {
+        console.log('Found new gymWhisperData format, keeping data.');
+      }
+      
+    } catch (e) {
+      console.error('Error during data cleanup:', e);
+    }
+  };
+
+  /**
+   * Run data cleanup on component mount
+   */
+  useEffect(() => {
+    cleanupOldDataFormats();
+  }, []);
+
+  /**
    * Handles clicking outside the sidebar to close it
    */
   const handleSidebarOverlayClick = (e) => {

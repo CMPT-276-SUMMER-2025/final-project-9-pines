@@ -20,6 +20,7 @@ describe('Gemini API Tests', () => {
     jest.clearAllMocks();
   });
 
+  //Workout data extraction
   test('callGeminiAPI should be called with correct parameters', async () => {
     const mockResponse = { result: 'BenchPress,10,135lbs' };
     callGeminiAPI.mockResolvedValue(mockResponse);
@@ -31,6 +32,7 @@ describe('Gemini API Tests', () => {
     expect(result).toEqual(mockResponse);
   });
 
+  //Error handling and data validation
   test('callGeminiAPI should handle errors gracefully', async () => {
     const mockError = { error: 'API Error', status: 500 };
     callGeminiAPI.mockResolvedValue(mockError);
@@ -53,9 +55,24 @@ describe('Gemini API Tests', () => {
     expect(result).toHaveProperty('error');
     expect(result.status).toBe(400);
   });
+
+  //Test for unrealistic workout data
+  test('callGeminiAPI should respond with NeedsReview for unrealistic workout', async () => {
+    const mockResponse = { result: 'PushUps,2000000,Bodyweight,NeedsReview' };
+    callGeminiAPI.mockResolvedValue(mockResponse);
+
+    const testText = 'I just did two million sets of pushups';
+    const result = await callGeminiAPI(testText);
+
+    expect(callGeminiAPI).toHaveBeenCalledWith(testText);
+    expect(result.result).toContain('NeedsReview');
+  });
+
+
+
 });
 
-// Test translation dictionary structure
+// Test language translation dictionary structure
 describe('Translation Dictionary', () => {
   test('should have the same keys for English and French', () => {
     const enKeys = Object.keys(translations.en);
@@ -117,7 +134,6 @@ Deadlift,5,225`;
     expect(summary.length).toBeGreaterThan(0);
   });
 });
-
 
 });
  

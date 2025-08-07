@@ -1,5 +1,5 @@
 // src/WorkoutPanel.jsx
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Trash2, Edit2, Check, X, CheckCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -29,6 +29,40 @@ export default function WorkoutPanel({
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [finalizing, setFinalizing] = useState(false);
   const [finalizedWorkout, setFinalizedWorkout] = useState(null);
+
+  /**
+   * Organizes workout data by workout type for grouped display
+   * @param {Array} data - Array of workout entries
+   * @returns {Object} Object with workout types as keys and arrays of entries as values
+   */
+  const organizeWorkoutDataByType = (data) => {
+    if (!data || data.length === 0) return {};
+    
+    const organized = {};
+    
+    data.forEach((entry, index) => {
+      const parts = entry.split(',');
+      const workoutType = parts[0] || '';
+      
+      if (!organized[workoutType]) {
+        organized[workoutType] = [];
+      }
+      
+      // Store the entry with its original index for editing/deleting
+      organized[workoutType].push({
+        entry,
+        originalIndex: index,
+        parts,
+      });
+    });
+    
+    return organized;
+  };
+
+  // Memoize the organized data to avoid recalculating on every render
+  const organizedWorkoutData = useMemo(() => {
+    return organizeWorkoutDataByType(workoutData);
+  }, [workoutData]);
 
   /**
    * Starts editing a workout entry
@@ -65,14 +99,29 @@ export default function WorkoutPanel({
    */
   function storeWorkoutDataInLocalStorage(data) {
     try {
+      // Get current date and time in Los Angeles time (America/Los_Angeles)
+      const now = new Date();
+      const laDateTime = now.toLocaleString('en-CA', {
+        timeZone: 'America/Los_Angeles',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      }).replace(',', ''); // e.g., "2025-08-07 15:03"
+      
+      // Create the new workout session with datetime
+      const workoutSession = [laDateTime, data];
+      
       const currentDataInLocalStorage = localStorage.getItem('gymWhisperData');
       if(currentDataInLocalStorage === null){
-        const jsonString = JSON.stringify([data]);
+        const jsonString = JSON.stringify([workoutSession]);
         localStorage.setItem('gymWhisperData', jsonString);
         return;
       }
       const currentData = JSON.parse(currentDataInLocalStorage);
-      const newData = [...currentData, ...data];
+      const newData = [...currentData, workoutSession];
       const jsonString = JSON.stringify(newData);
       localStorage.setItem('gymWhisperData', jsonString);
     } catch (e) {
@@ -92,40 +141,6 @@ export default function WorkoutPanel({
     setFinalizing(true);
     setFinalizedWorkout(workoutData);
   };
-
-  // /**
-  //  * Generates and triggers download of a CSV file from workoutData
-  //  */
-  // function downloadCSVWorkoutData(){
-  //   // Generates and triggers download of a CSV file from workoutData
-  //   if (!workoutData || workoutData.length === 0) {
-  //     alert("No workout data to export.");
-  //     return;
-  //   }
-
-  //   // Prepare CSV header and rows
-  //   const header = "workoutType,Reps,Weight";
-  //   const rows = workoutData?.map(row => {
-  //     // If already CSV, just return; else, try to join array
-  //     if (typeof row === "string") return row;
-  //     if (Array.isArray(row)) return row.join(",");
-  //     return "";
-  //   });
-  //   const csvContent = [header, ...rows].join("\r\n");
-
-  //   // Create a Blob and trigger download
-  //   const blob = new Blob([csvContent], { type: "text/csv" });
-  //   const url = URL.createObjectURL(blob);
-
-  //   const a = document.createElement("a");
-  //   a.href = url;
-  //   a.download = "workout_data.csv";
-  //   document.body.appendChild(a);
-  //   a.click();
-  //   document.body.removeChild(a);
-  //   URL.revokeObjectURL(url);
-  //   return null
-  // }
 
   /**
    * Confirms the finalization and closes the panel
@@ -156,10 +171,9 @@ export default function WorkoutPanel({
   };
 
   /**
-   /**
-    * Removes the NeedsReview flag from a workout entry
-    * @param {number} index - Index of the entry to approve
-    */
+   * Removes the NeedsReview flag from a workout entry
+   * @param {number} index - Index of the entry to approve
+   */
   const approveEntry = (index) => {
     setWorkoutData((prev) =>
       prev.map((entry, i) => {
@@ -209,6 +223,14 @@ export default function WorkoutPanel({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={handleOverlayClick}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                handleOverlayClick(e);
+              }
+            }}
+            aria-label="Close workout panel"
           />
           
           <motion.div
@@ -251,100 +273,108 @@ export default function WorkoutPanel({
                   <table className="workout-table" role="grid" aria-label="Workout entries">
                     <thead>
                       <tr>
-                        <th scope="col">WorkoutType</th>
-                        <th scope="col">Reps</th>
-                        <th scope="col">Weight</th>
+                        <th scope="col">Exercise</th>
+                        <th scope="col">Sets</th>
                         <th scope="col" aria-label="Actions"></th>
                       </tr>
                     </thead>
                     <tbody>
-                      {workoutData?.map((entry, idx) => {
-                        const parts = entry.split(',');
-                        const workoutType = parts[0] || '';
-                        const reps = parts[1] || '';
-                        const weight = parts[2] || '';
-                        const needsReview = parts[3] === 'NeedsReview';
-                        const isEditing = editingIndex === idx;
-
-                        return (
-                          <tr key={idx} className={isEditing ? 'editing' : ''}>
-                            <td>
-                              {isEditing ? (
-                                <input
-                                  type="text"
-                                  value={editText}
-                                  onChange={(e) => setEditText(e.target.value)}
-                                  className="edit-input"
-                                  aria-label="Edit workout entry"
-                                />
-                              ) : (
-                                workoutType
-                              )}
-                            </td>
-                            <td>{isEditing ? '' : reps}</td>
-                            <td>{isEditing ? '' : weight}</td>
-                            <td className="actions-cell">
-                              {needsReview && !isEditing && (
-                                <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-                                  <div className="review-section">
-                                    <span className="review-warning">{t('needsReview')}</span>
-        
-                                  </div>
-                                  <button
-                                    onClick={() => {
-                                      approveEntry(idx);          
-                                    }}
-                                    style={{backgroundColor: 'green', color: 'white', borderRadius: '5px', padding: '8px 10px', fontSize: '14px', borderWidth: '0px'}}
-                                    aria-label="Approve this entry"
-                                    title="Approve entry"
-                                  >
-                                  Yes
-                                  </button>
-                                </div>
-                              )}
-                              {isEditing ? (
-                                <>
-                                  <button
-                                    onClick={saveEditing}
-                                    className="icon-btn action-btn"
-                                    aria-label="Save edit"
-                                    title="Save"
-                                  >
-                                    <Check size={20} />
-                                  </button>
-                                  <button
-                                    onClick={cancelEditing}
-                                    className="icon-btn action-btn"
-                                    aria-label="Cancel edit"
-                                    title="Cancel"
-                                  >
-                                    <X size={20} />
-                                  </button>
-                                </>
-                              ) : (
-                                <>
-                                  <button
-                                    onClick={() => startEditing(idx)}
-                                    className="icon-btn action-btn"
-                                    aria-label={`Edit workout entry ${idx + 1}`}
-                                    title="Edit"
-                                  >
-                                    <Edit2 size={20} />
-                                  </button>
-                                  <button
-                                    onClick={() => removeEntry(idx)}
-                                    className="icon-btn action-btn"
-                                    aria-label={`Delete workout entry ${idx + 1}`}
-                                    title="Delete"
-                                  >
-                                    <Trash2 size={20} />
-                                  </button>
-                                </>
-                              )}
+                      {Object.entries(organizedWorkoutData).map(([workoutType, entries]) => (
+                        <React.Fragment key={workoutType}>
+                          {/* Exercise Name Row */}
+                          <tr className="exercise-header-row">
+                            <td colSpan="3" className="exercise-name-header">
+                              {workoutType}
                             </td>
                           </tr>
-                        );
-                      })}
+                          {/* Individual Sets */}
+                          {entries.map(({ entry, originalIndex, parts }) => {
+                            const reps = parts[1] || '';
+                            const weight = parts[2] || '';
+                            const needsReview = parts[3] === 'NeedsReview';
+                            const isEditing = editingIndex === originalIndex;
+
+                            return (
+                              <tr key={originalIndex} className={isEditing ? 'editing' : 'set-row'}>
+                                <td></td>
+                                <td className="set-info-cell">
+                                  {isEditing ? (
+                                    <input
+                                      type="text"
+                                      value={editText}
+                                      onChange={(e) => setEditText(e.target.value)}
+                                      className="edit-input"
+                                      aria-label="Edit workout entry"
+                                    />
+                                  ) : (
+                                    <div className="set-info-container">
+                                      <span className="set-info">
+                                        {reps} x {weight}
+                                      </span>
+                                      {needsReview && (
+                                        <div className="review-section">
+                                          <span className="review-warning">{t('needsReview')}</span>
+                                          <button
+                                            onClick={() => {
+                                              approveEntry(originalIndex);
+                                            }}
+                                            style={{backgroundColor: 'green', color: 'white', borderRadius: '5px', padding: '4px 8px', fontSize: '12px', borderWidth: '0px', marginLeft: '8px'}}
+                                            aria-label="Approve this entry"
+                                            title="Approve entry"
+                                          >
+                                            Yes
+                                          </button>
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+                                </td>
+                                <td className="actions-cell">
+                                  {isEditing ? (
+                                    <>
+                                      <button
+                                        onClick={saveEditing}
+                                        className="icon-btn action-btn"
+                                        aria-label="Save edit"
+                                        title="Save"
+                                      >
+                                        <Check size={20} />
+                                      </button>
+                                      <button
+                                        onClick={cancelEditing}
+                                        className="icon-btn action-btn"
+                                        aria-label="Cancel edit"
+                                        title="Cancel"
+                                      >
+                                        <X size={20} />
+                                      </button>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <button
+                                        onClick={() => startEditing(originalIndex)}
+                                        className="icon-btn action-btn"
+                                        aria-label={`Edit workout entry ${originalIndex + 1}`}
+                                        title="Edit"
+                                      >
+                                        <Edit2 size={20} />
+                                      </button>
+                                      <button
+                                        onClick={() => removeEntry(originalIndex)}
+                                        className="icon-btn action-btn"
+                                        aria-label={`Delete workout entry ${originalIndex + 1}`}
+                                        title="Delete"
+                                      >
+                                        <Trash2 size={20} />
+                                      </button>
+                                    </>
+                                  )}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </React.Fragment>
+                      ))}
                     </tbody>
                   </table>
                 </div>

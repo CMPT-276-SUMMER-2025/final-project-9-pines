@@ -53,23 +53,30 @@ Now complete the following example:
 `;
 
 
-// Prompt for summarizing workout CSV data
-const csvSummaryPrompt = `You are a helpful assistant for a workout tracking application.
+// Prompt for generating a workout performance report (not a summary)
+const csvPerformanceReportPrompt = `You are a helpful assistant for a workout tracking application.
+
+IMPORTANT: If you see the instruction "IMPORTANT: Reply in French." later in this prompt, you must reply in French. Otherwise, reply in English.
+
 You will be given a list of workout entries in CSV format, where each entry is in the form: workoutType,Reps,Weight[,Date].
-Your job is to summarize the user's workout history in a concise, human-readable way.
-Highlight the most common workout types, total sets, average reps, and any notable trends or achievements.
-Do not include the raw CSV data in your response. Be brief and informative.
+Your job is to analyze the user's workout data over time and provide a performance report. Focus on comparing the user's performance for each workout type across different dates. Clearly state whether the user is improving, regressing, or staying consistent for each exercise. Highlight any notable progress, plateaus, or regressions.
+
+Do not include the raw CSV data in your response. Do not simply summarize; instead, provide a clear analysis of trends and progress (or lack thereof) for each workout type over time.
 
 Example input:
-BenchPress,10,135lbs
-BenchPress,9,135lbs
-PushUps,15,Bodyweight
-PushUps,12,Bodyweight
+BenchPress,10,135lbs,2024-06-01
+BenchPress,9,135lbs,2024-06-01
+PushUps,15,Bodyweight,2024-06-01
+PushUps,12,Bodyweight,2024-06-01
+BenchPress,11,135lbs,2024-06-08
+PushUps,16,Bodyweight,2024-06-08
 
 Example output:
-You performed mostly BenchPress and PushUps. For BenchPress, you completed 2 sets averaging 9.5 reps at 135lbs. For PushUps, you did 2 sets averaging 13.5 reps. Great consistency!
+BenchPress: You increased your reps from an average of 9.5 on 2024-06-01 to 11 on 2024-06-08 at the same weight, showing improvement.
+PushUps: Your reps improved from an average of 13.5 to 16, indicating progress.
+Overall, you are making good progress in both exercises.
 
-Now summarize the following workout data:
+Now analyze the following workout data and report on the user's performance over time:
 `;
 
 /**
@@ -78,7 +85,7 @@ Now summarize the following workout data:
  * @param {string} language - Language code, e.g. 'en' or 'fr'. Defaults to 'en'.
  * @returns {Promise<{summary: string}|{error: string, status: number}>}
  */
-export async function summarizeWorkoutCSV(workoutData, language = 'en') {
+export async function generatePerformanceReport(workoutData, language = 'en') {
   try {
     if (!Array.isArray(workoutData) || workoutData.length === 0) {
       return { error: 'Missing or invalid \'workoutData\' parameter.', status: 400 };
@@ -87,10 +94,10 @@ export async function summarizeWorkoutCSV(workoutData, language = 'en') {
     const csvString = workoutData.join('\n');
     // Add language-specific instruction to the prompt
     const languageInstruction = language === 'fr' ? '\n\nIMPORTANT: Reply in French.' : '';
-    const prompt = csvSummaryPrompt + languageInstruction + '\n' + csvString;
+    const prompt = csvPerformanceReportPrompt + languageInstruction + '\n' + csvString;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-2.5-flash-lite',
       contents: prompt,
       config: {
         thinkingConfig: {

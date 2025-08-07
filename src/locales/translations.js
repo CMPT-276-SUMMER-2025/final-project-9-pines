@@ -54,7 +54,7 @@ export const translations = {
     noHistoryFound: 'No workout history found.',
     completeWorkouts: 'Complete and finalize workouts to see them here.',
     backToHome: '← Back to Home',
-    summarizeWorkoutHistory: 'Summarize Workout History',
+    performanceReport: 'Performance Report',
     workoutSummary: 'Workout Summary',
     close: 'Close',
     
@@ -130,7 +130,7 @@ export const translations = {
     noHistoryFound: 'Aucun historique d\'entraînement trouvé.',
     completeWorkouts: 'Terminez et finalisez des entraînements pour les voir ici.',
     backToHome: '← Retour à l\'accueil',
-    summarizeWorkoutHistory: 'Résumer l\'historique d\'entraînement',
+    performanceReport: 'Rapport de performance',
     workoutSummary: 'Résumé d\'entraînement',
     close: 'Fermer',
     

@@ -37,14 +37,8 @@ export default function MicrophoneButton({
     // Split by ';' and trim each entry
     const entries = csvString.split(';').map(s => s.trim()).filter(Boolean);
     if (entries.length === 0) return;
-    // For each entry, append the current date as a string (ISO format)
-    // Get today's date in Los Angeles time (America/Los_Angeles)
-    const laDate = new Date().toLocaleDateString('en-CA', { 
-      timeZone: 'America/Los_Angeles', 
-    }); // e.g., "2024-06-09"
-    for (let i = 0; i < entries.length; i++) {
-      entries[i] = entries[i] + ',' + laDate;
-    }
+    
+    // Store entries without datetime (datetime will be added during finalization)
     if(workoutData === undefined || workoutData === null){
       setWorkoutData([...entries]);
     }else{

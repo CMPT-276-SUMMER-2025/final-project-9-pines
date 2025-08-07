@@ -1,20 +1,22 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from './Header-';
 import Sidebar from './Side-bar';
 import { useLanguage } from '../contexts/LanguageContext';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 
 // Import the Gemini summarize API
-import { summarizeWorkoutCSV } from '../llm/gemini';
+import { generatePerformanceReport } from '../llm/gemini';
 
 /**
  * HistoryPage component: Displays workout history and provides summary functionality
  * 
  * Features:
  * - Loads workout history from localStorage
- * - Displays workout entries in a table format
+ * - Displays workout entries organized by date and time
  * - Provides AI-powered workout summary
  * - Allows CSV export of workout data
+ * - Collapsible date and time sections
  */
 export default function HistoryPage() {
   const { t } = useLanguage();
@@ -28,10 +30,122 @@ export default function HistoryPage() {
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
   const [workoutHistory, setWorkoutHistory] = React.useState([]);
-  const [showSummary, setShowSummary] = React.useState(false);
+  const [showPerformanceReport, setShowPerformanceReport] = React.useState(false);
   const [summaryText, setSummaryText] = React.useState('');
   const [loadingSummary, setLoadingSummary] = React.useState(false);
   const [summaryError, setSummaryError] = React.useState('');
+  
+  // State for collapsible sections
+  const [expandedDates, setExpandedDates] = useState(new Set());
+  const [expandedTimes, setExpandedTimes] = useState(new Set());
+
+  /**
+   * Toggles the expanded state of a date section
+   * @param {string} date - The date to toggle
+   */
+  const toggleDate = (date) => {
+    setExpandedDates(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(date)) {
+        newSet.delete(date);
+      } else {
+        newSet.add(date);
+      }
+      return newSet;
+    });
+  };
+
+  /**
+   * Toggles the expanded state of a time section
+   * @param {string} dateTimeKey - The date-time key to toggle
+   */
+  const toggleTime = (dateTimeKey) => {
+    setExpandedTimes(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(dateTimeKey)) {
+        newSet.delete(dateTimeKey);
+      } else {
+        newSet.add(dateTimeKey);
+      }
+      return newSet;
+    });
+  };
+
+  /**
+   * Organizes workout data by date and time, then by exercise type
+   * @param {Array} data - Array of workout sessions
+   * @returns {Object} Object organized by date -> time -> exercise type
+   */
+  const organizeWorkoutDataByDateTime = (data) => {
+    if (!data || data.length === 0) return {};
+    
+    const organized = {};
+    
+    // Handle the array of workout sessions format from localStorage
+    // Each session is [datetime, [workoutEntries]]
+    data.forEach((workoutSession, sessionIndex) => {
+      if (Array.isArray(workoutSession) && workoutSession.length === 2) {
+        const dateTime = workoutSession[0]; // e.g., "2025-08-07 15:03"
+        const workoutEntries = workoutSession[1]; // Array of workout entries
+        
+        // Parse date and time from the session datetime
+        const [date, time] = dateTime.split(' ');
+        const hour = time ? time.split(':')[0] : '';
+        const minute = time ? time.split(':')[1] : '';
+        const timeDisplay = time && hour && minute ? `${hour}:${minute}` : 'Unknown Time';
+        
+        // Process each workout entry in the session
+        workoutEntries.forEach((entry, entryIndex) => {
+          const parts = entry.split(',');
+          const workoutType = parts[0] || '';
+          const reps = parts[1] || '';
+          const weight = parts[2] || '';
+          
+          // Determine if NeedsReview is present
+          let needsReview = false;
+          if (parts.length >= 4 && parts[3] === 'NeedsReview') {
+            needsReview = true;
+          }
+          
+          // Debug logging
+          console.log('Processing entry:', entry);
+          console.log('Session datetime:', dateTime);
+          console.log('Parsed date:', date, 'time:', time, 'timeDisplay:', timeDisplay);
+          console.log('NeedsReview:', needsReview);
+          
+          if (!organized[date]) {
+            organized[date] = {};
+          }
+          
+          if (!organized[date][timeDisplay]) {
+            organized[date][timeDisplay] = {};
+          }
+          
+          if (!organized[date][timeDisplay][workoutType]) {
+            organized[date][timeDisplay][workoutType] = [];
+          }
+          
+          // Store the entry with its original index for reference
+          organized[date][timeDisplay][workoutType].push({
+            entry,
+            originalIndex: `${sessionIndex}-${entryIndex}`,
+            parts,
+            reps,
+            weight,
+            needsReview,
+          });
+        });
+      }
+    });
+    
+    console.log('Organized data:', organized);
+    return organized;
+  };
+
+  // Memoize the organized data to avoid recalculating on every render
+  const organizedWorkoutData = useMemo(() => {
+    return organizeWorkoutDataByDateTime(workoutHistory);
+  }, [workoutHistory]);
 
   /**
    * Generates and triggers download of a CSV file from workout history
@@ -44,13 +158,23 @@ export default function HistoryPage() {
     }
 
     // Prepare CSV header and rows
-    const header = 'workoutType,Reps,Weight';
-    const rows = workoutHistory?.map(row => {
-      // If already CSV, just return; else, try to join array
-      if (typeof row === 'string') return row;
-      if (Array.isArray(row)) return row.join(',');
-      return '';
+    const header = 'workoutType,Reps,Weight,Date,Time';
+    const rows = workoutHistory.flatMap(session => {
+      if (Array.isArray(session) && session.length === 2) {
+        const dateTime = session[0]; // e.g., "2025-08-07 15:03"
+        const workoutEntries = session[1]; // Array of workout entries
+        
+        return workoutEntries.map(entry => {
+          if (typeof entry === 'string') {
+            // Add the session datetime to each entry for export
+            return `${entry},${dateTime}`;
+          }
+          return '';
+        }).filter(Boolean);
+      }
+      return [];
     });
+    
     const csvContent = [header, ...rows].join('\r\n');
 
     // Create a Blob and trigger download
@@ -87,11 +211,9 @@ export default function HistoryPage() {
       const raw = localStorage.getItem('gymWhisperData');
       if (raw) {
         const data = JSON.parse(raw);
-        // Data is stored as an array of arrays: [["PushUp,15,Bodyweight,2025-08-06"]]
+        // Data is stored as an array of workout sessions: [["2025-08-07 15:03", ["PushUp,15,Bodyweight", "BenchPress,10,145lbs"]]]
         if (Array.isArray(data)) {
-          // Flatten the array of arrays into a single array of workout entries
-          const flattenedData = data.flat();
-          setWorkoutHistory(flattenedData);
+          setWorkoutHistory(data);
         } else {
           setWorkoutHistory([]);
         }
@@ -107,26 +229,28 @@ export default function HistoryPage() {
   /**
    * Handles the summary button click and generates AI summary
    */
-  async function handleShowSummary() {
+  async function handleGeneratePerformanceReport() {
     setLoadingSummary(true);
     setSummaryError('');
-    setShowSummary(true);
+    setShowPerformanceReport(true);
     try {
-      // Only pass string entries to the API, or convert objects to CSV strings
-      const csvRows = workoutHistory.map(entry => {
-        if (typeof entry === 'string') return entry;
-        if (entry && typeof entry === 'object') {
-          // Try to convert object to CSV string
-          const workoutType = entry.workoutType || entry.type || '';
-          const reps = entry.reps || entry.repetitions || '';
-          const weight = entry.weight || '';
-          // Date is optional for summary
-          return [workoutType, reps, weight].join(',');
+      // Extract workout data from the new format for summary
+      const csvRows = workoutHistory.flatMap(session => {
+        if (Array.isArray(session) && session.length === 2) {
+          const workoutEntries = session[1]; // Array of workout entries
+          return workoutEntries.map(entry => {
+            if (typeof entry === 'string') {
+              // Keep only workoutType, reps, weight for summary
+              const parts = entry.split(',');
+              return [parts[0], parts[1], parts[2]].join(',');
+            }
+            return '';
+          }).filter(Boolean);
         }
-        return '';
-      }).filter(Boolean);
+        return [];
+      });
 
-      const response = await summarizeWorkoutCSV(csvRows);
+      const response = await generatePerformanceReport(csvRows);
       if (response && response.summary) {
         setSummaryText(response.summary);
       } else if (response && response.error) {
@@ -144,8 +268,8 @@ export default function HistoryPage() {
   /**
    * Closes the summary popup and resets state
    */
-  function handleCloseSummary() {
-    setShowSummary(false);
+  function handleClosePerformanceReport() {
+    setShowPerformanceReport(false);
     setSummaryText('');
     setSummaryError('');
   }
@@ -156,6 +280,50 @@ export default function HistoryPage() {
   const handleSidebarOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       setMenuOpen(false);
+    }
+  };
+
+  /**
+   * Formats date for display
+   */
+  const formatDate = (dateString) => {
+    try {
+      // Handle the format "2025-08-07 15:03"
+      if (dateString && dateString.includes(' ')) {
+        const [datePart, timePart] = dateString.split(' ');
+        const [year, month, day] = datePart.split('-').map(Number);
+        
+        // Create date object (month is 0-indexed, so subtract 1)
+        const date = new Date(year, month - 1, day);
+        
+        // Check if date is valid
+        if (isNaN(date.getTime())) {
+          return dateString; // Return original if invalid
+        }
+        
+        return date.toLocaleDateString('en-US', { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric', 
+        });
+      }
+      
+      // Fallback for other date formats
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return dateString; // Return original if invalid
+      }
+      
+      return date.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+      });
+    } catch (e) {
+      console.error('Date parsing error:', e, 'for dateString:', dateString);
+      return dateString; // Return original string if parsing fails
     }
   };
 
@@ -194,11 +362,22 @@ export default function HistoryPage() {
         <div className="history-container">
           <h1>{t('workoutHistory')}</h1>
           <p>{t('viewPastSessions')}</p>
-          
-        
 
+
+          {/* Show summary button and back link side by side */}
+          {workoutHistory && workoutHistory.length > 0 && (
+            <button
+              className="summary-btn"
+              onClick={handleGeneratePerformanceReport}
+              disabled={loadingSummary}
+              aria-label="Summarize Workout History"
+            >
+              {loadingSummary ? 'Reporting...' : t('performanceReport')}
+            </button>
+          )}
+          
           {/* Summary popup/modal */}
-          {showSummary && (
+          {showPerformanceReport && (
             <div
               className="summary-popup"
               style={{
@@ -212,7 +391,7 @@ export default function HistoryPage() {
               }}
               role="dialog"
               aria-modal="true"
-              aria-label="Workout Summary"
+              aria-label="Workout Performance Report"
             >
               <div
                 style={{
@@ -225,7 +404,7 @@ export default function HistoryPage() {
                   minWidth: '300px',
                 }}
               >
-                <h2 style={{marginTop:0}}>{t('workoutSummary')}</h2>
+                <h2 style={{marginTop:0}}>{t('performanceReport')}</h2>
                 {loadingSummary ? (
                   <p>Loading summary...</p>
                 ) : summaryError ? (
@@ -234,7 +413,7 @@ export default function HistoryPage() {
                   <p style={{whiteSpace: 'pre-line'}}>{summaryText}</p>
                 )}
                 <button
-                  onClick={handleCloseSummary}
+                  onClick={handleClosePerformanceReport}
                   style={{
                     marginTop: '1.5rem',
                     padding: '12px 24px',
@@ -243,7 +422,7 @@ export default function HistoryPage() {
                     cursor: 'pointer',
                     transition: 'background-color 0.3s ease',
                   }}
-                  aria-label="Close Summary"
+                  aria-label="Close Performance Report"
                 >
                   {t('close')}
                 </button>
@@ -261,44 +440,101 @@ export default function HistoryPage() {
               <table className="workout-table" role="grid" aria-label="Workout history">
                 <thead>
                   <tr>
-                    <th scope="col">{t('workoutType')}</th>
-                    <th scope="col">{t('reps')}</th>
-                    <th scope="col">{t('weight')}</th>
-                    <th scope="col">{t('date')}</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Exercise</th>
+                    <th scope="col">Sets</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {workoutHistory.map((entry, idx) => {
-                    // Handle different data formats
-                    let workoutType, reps, weight, date;
-                    
-                    if (typeof entry === 'string') {
-                      // If entry is a CSV string like "BenchPress,10,135lbs"
-                      const parts = entry.split(',');
-                      workoutType = parts[0] || '';
-                      reps = parts[1] || '';
-                      weight = parts[2] || '';
-                      date = parts[3];
-                    } else if (entry && typeof entry === 'object') {
-                      // If entry is an object
-                      workoutType = entry.workoutType || entry.type || '';
-                      reps = entry.reps || entry.repetitions || '';
-                      weight = entry.weight || '';
-                      date = entry.date || entry.timestamp || 'N/A';
-                    } else {
-                      workoutType = 'Unknown';
-                      reps = '';
-                      weight = '';
-                      date = 'N/A';
-                    }
-
+                  {Object.entries(organizedWorkoutData).map(([date, timeData]) => {
+                    const isDateExpanded = expandedDates.has(date);
                     return (
-                      <tr key={idx}>
-                        <td>{workoutType}</td>
-                        <td>{reps}</td>
-                        <td>{weight}</td>
-                        <td>{date}</td>
-                      </tr>
+                      <React.Fragment key={date}>
+                        {/* Date Header Row */}
+                        <tr 
+                          className="date-header-row clickable"
+                          onClick={() => toggleDate(date)}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              toggleDate(date);
+                            }
+                          }}
+                          aria-label={`Toggle ${formatDate(date)}`}
+                        >
+                          <td colSpan="4" className="date-header">
+                            <div className="header-content">
+                              {isDateExpanded ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
+                              <span>{formatDate(date)}</span>
+                            </div>
+                          </td>
+                        </tr>
+                        {/* Time and Exercise Data - Only show if date is expanded */}
+                        {isDateExpanded && Object.entries(timeData).map(([time, exerciseData]) => {
+                          const dateTimeKey = `${date}-${time}`;
+                          const isTimeExpanded = expandedTimes.has(dateTimeKey);
+                          return (
+                            <React.Fragment key={`${date}-${time}`}>
+                              {/* Time Header Row */}
+                              <tr 
+                                className="time-header-row clickable"
+                                onClick={() => toggleTime(dateTimeKey)}
+                                role="button"
+                                tabIndex={0}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter' || e.key === ' ') {
+                                    toggleTime(dateTimeKey);
+                                  }
+                                }}
+                                aria-label={`Toggle ${time}`}
+                              >
+                                <td></td>
+                                <td colSpan="3" className="time-header">
+                                  <div className="header-content">
+                                    {isTimeExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                                    <span>{time}</span>
+                                  </div>
+                                </td>
+                              </tr>
+                              {/* Exercise Data - Only show if time is expanded */}
+                              {isTimeExpanded && Object.entries(exerciseData).map(([exerciseType, sets]) => (
+                                <React.Fragment key={`${date}-${time}-${exerciseType}`}>
+                                  {/* Exercise Name Row */}
+                                  <tr className="exercise-header-row">
+                                    <td></td>
+                                    <td></td>
+                                    <td colSpan="2" className="exercise-name-header">
+                                      {exerciseType}
+                                    </td>
+                                  </tr>
+                                  {/* Individual Sets */}
+                                  {sets.map(({ entry, originalIndex, reps, weight, needsReview }) => (
+                                    <tr key={originalIndex} className="set-row">
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                      <td className="set-info-cell">
+                                        <div className="set-info-container">
+                                          <span className="set-info">
+                                            {reps} x {weight}
+                                          </span>
+                                          {needsReview && (
+                                            <div className="review-section">
+                                              <span className="review-warning">{t('needsReview')}</span>
+                                            </div>
+                                          )}
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </React.Fragment>
+                              ))}
+                            </React.Fragment>
+                          );
+                        })}
+                      </React.Fragment>
                     );
                   })}
                 </tbody>
@@ -310,18 +546,6 @@ export default function HistoryPage() {
             {t('backToHome')}
           </Link>
 
-          {/* Show summary button and back link side by side */}
-          {workoutHistory && workoutHistory.length > 0 && (
-            <button
-              className="summary-btn"
-              onClick={handleShowSummary}
-              disabled={loadingSummary}
-              aria-label="Summarize Workout History"
-              style={{marginLeft: '10%'}}
-            >
-              {loadingSummary ? 'Summarizing...' : t('summarizeWorkoutHistory')}
-            </button>
-          )}
         </div>
       </main>
     </div>
