@@ -31,12 +31,12 @@ export default function WorkoutFinalizeView({ finalizedWorkout, setShowConfirmDi
           </thead>
           <tbody>
             {finalizedWorkout?.map((entry, idx) => {
-              const parts = entry.split(",");
+              const parts = entry.split(',');
               return (
                 <tr key={idx}>
-                  <td>{parts[0] || ""}</td>
-                  <td>{parts[1] || ""}</td>
-                  <td>{parts[2] || ""}</td>
+                  <td>{parts[0] || ''}</td>
+                  <td>{parts[1] || ''}</td>
+                  <td>{parts[2] || ''}</td>
                 </tr>
               );
             })}

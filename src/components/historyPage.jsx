@@ -39,32 +39,32 @@ export default function HistoryPage() {
   function downloadCSVWorkoutData(){
     // Generates and triggers download of a CSV file from workoutData
     if (!workoutHistory || workoutHistory.length === 0) {
-      alert("No workout data to export.");
+      alert('No workout data to export.');
       return;
     }
 
     // Prepare CSV header and rows
-    const header = "workoutType,Reps,Weight";
+    const header = 'workoutType,Reps,Weight';
     const rows = workoutHistory?.map(row => {
       // If already CSV, just return; else, try to join array
-      if (typeof row === "string") return row;
-      if (Array.isArray(row)) return row.join(",");
-      return "";
+      if (typeof row === 'string') return row;
+      if (Array.isArray(row)) return row.join(',');
+      return '';
     });
-    const csvContent = [header, ...rows].join("\r\n");
+    const csvContent = [header, ...rows].join('\r\n');
 
     // Create a Blob and trigger download
-    const blob = new Blob([csvContent], { type: "text/csv" });
+    const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
 
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
-    a.download = "workout_data.csv";
+    a.download = 'workout_data.csv';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    return null
+    return null;
   }
 
   /**
@@ -72,9 +72,9 @@ export default function HistoryPage() {
    */
   React.useEffect(() => {
     if (isDark) {
-      document.documentElement.classList.add("dark");
+      document.documentElement.classList.add('dark');
     } else {
-      document.documentElement.classList.remove("dark");
+      document.documentElement.classList.remove('dark');
     }
     localStorage.setItem('darkMode', JSON.stringify(isDark));
   }, [isDark]);
@@ -84,7 +84,7 @@ export default function HistoryPage() {
    */
   React.useEffect(() => {
     try {
-      const raw = localStorage.getItem("gymWhisperData");
+      const raw = localStorage.getItem('gymWhisperData');
       if (raw) {
         const data = JSON.parse(raw);
         // Data is stored as an array of arrays: [["PushUp,15,Bodyweight,2025-08-06"]]
@@ -99,7 +99,7 @@ export default function HistoryPage() {
         setWorkoutHistory([]);
       }
     } catch (e) {
-      console.error("Failed to parse workout history:", e);
+      console.error('Failed to parse workout history:', e);
       setWorkoutHistory([]);
     }
   }, []);
@@ -114,8 +114,8 @@ export default function HistoryPage() {
     try {
       // Only pass string entries to the API, or convert objects to CSV strings
       const csvRows = workoutHistory.map(entry => {
-        if (typeof entry === "string") return entry;
-        if (entry && typeof entry === "object") {
+        if (typeof entry === 'string') return entry;
+        if (entry && typeof entry === 'object') {
           // Try to convert object to CSV string
           const workoutType = entry.workoutType || entry.type || '';
           const reps = entry.reps || entry.repetitions || '';
@@ -132,10 +132,10 @@ export default function HistoryPage() {
       } else if (response && response.error) {
         setSummaryError(response.error);
       } else {
-        setSummaryError("Failed to get summary.");
+        setSummaryError('Failed to get summary.');
       }
     } catch (e) {
-      setSummaryError("An error occurred while summarizing.");
+      setSummaryError('An error occurred while summarizing.');
     } finally {
       setLoadingSummary(false);
     }
@@ -166,8 +166,16 @@ export default function HistoryPage() {
 
       {/* Sidebar overlay for click-outside-to-close */}
       <div 
-        className={`sidebar-overlay${menuOpen ? " open" : ""}`}
+        className={`sidebar-overlay${menuOpen ? ' open' : ''}`}
         onClick={handleSidebarOverlayClick}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            handleSidebarOverlayClick(e);
+          }
+        }}
+        aria-label="Close sidebar"
       />
 
       {/* Sidebar */}
@@ -194,13 +202,13 @@ export default function HistoryPage() {
             <div
               className="summary-popup"
               style={{
-                position: "fixed",
+                position: 'fixed',
                 top: 0, left: 0, right: 0, bottom: 0,
-                background: "rgba(0,0,0,0.4)",
+                background: 'rgba(0,0,0,0.4)',
                 zIndex: 1000,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center"
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
               role="dialog"
               aria-modal="true"
@@ -208,32 +216,32 @@ export default function HistoryPage() {
             >
               <div
                 style={{
-                  borderRadius: "16px",
-                  padding: "2rem",
-                  maxWidth: "90vw",
-                  maxHeight: "80vh",
-                  overflowY: "auto",
-                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
-                  minWidth: "300px"
+                  borderRadius: '16px',
+                  padding: '2rem',
+                  maxWidth: '90vw',
+                  maxHeight: '80vh',
+                  overflowY: 'auto',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                  minWidth: '300px',
                 }}
               >
                 <h2 style={{marginTop:0}}>{t('workoutSummary')}</h2>
                 {loadingSummary ? (
                   <p>Loading summary...</p>
                 ) : summaryError ? (
-                  <p style={{color: "red"}}>{summaryError}</p>
+                  <p style={{color: 'red'}}>{summaryError}</p>
                 ) : (
-                  <p style={{whiteSpace: "pre-line"}}>{summaryText}</p>
+                  <p style={{whiteSpace: 'pre-line'}}>{summaryText}</p>
                 )}
                 <button
                   onClick={handleCloseSummary}
                   style={{
-                    marginTop: "1.5rem",
-                    padding: "12px 24px",
-                    borderRadius: "8px",
-                    fontWeight: "600",
-                    cursor: "pointer",
-                    transition: "background-color 0.3s ease"
+                    marginTop: '1.5rem',
+                    padding: '12px 24px',
+                    borderRadius: '8px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.3s ease',
                   }}
                   aria-label="Close Summary"
                 >
@@ -298,22 +306,22 @@ export default function HistoryPage() {
             </div>
           )}
             
-              <Link to="/" className="back-btn" style={{ flexShrink: 0 }}>
-                {t('backToHome')}
-              </Link>
+          <Link to="/" className="back-btn" style={{ flexShrink: 0 }}>
+            {t('backToHome')}
+          </Link>
 
-              {/* Show summary button and back link side by side */}
-              {workoutHistory && workoutHistory.length > 0 && (
-                <button
-                  className="summary-btn"
-                  onClick={handleShowSummary}
-                  disabled={loadingSummary}
-                  aria-label="Summarize Workout History"
-                  style={{marginLeft: "10%"}}
-                >
-                  {loadingSummary ? "Summarizing..." : t('summarizeWorkoutHistory')}
-                </button>
-              )}
+          {/* Show summary button and back link side by side */}
+          {workoutHistory && workoutHistory.length > 0 && (
+            <button
+              className="summary-btn"
+              onClick={handleShowSummary}
+              disabled={loadingSummary}
+              aria-label="Summarize Workout History"
+              style={{marginLeft: '10%'}}
+            >
+              {loadingSummary ? 'Summarizing...' : t('summarizeWorkoutHistory')}
+            </button>
+          )}
         </div>
       </main>
     </div>

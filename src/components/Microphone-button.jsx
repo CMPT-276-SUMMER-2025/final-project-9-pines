@@ -1,5 +1,5 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React from 'react';
+import { motion } from 'framer-motion';
 import { callGeminiAPI } from '../llm/gemini';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -24,7 +24,7 @@ export default function MicrophoneButton({
   listening,       
   resetTranscript, 
   startListening,  
-  stopListening    
+  stopListening,    
 }) {
   const { language, t } = useLanguage();
 
@@ -33,19 +33,19 @@ export default function MicrophoneButton({
    * @param {string} csvString - CSV formatted workout data
    */
   function updateWorkoutData(csvString){
-    if (!csvString || typeof csvString !== "string") return;
+    if (!csvString || typeof csvString !== 'string') return;
     // Split by ';' and trim each entry
-    const entries = csvString.split(";").map(s => s.trim()).filter(Boolean);
+    const entries = csvString.split(';').map(s => s.trim()).filter(Boolean);
     if (entries.length === 0) return;
     // For each entry, append the current date as a string (ISO format)
     // Get today's date in Los Angeles time (America/Los_Angeles)
     const laDate = new Date().toLocaleDateString('en-CA', { 
-      timeZone: 'America/Los_Angeles' 
+      timeZone: 'America/Los_Angeles', 
     }); // e.g., "2024-06-09"
     for (let i = 0; i < entries.length; i++) {
-      entries[i] = entries[i] + "," + laDate;
+      entries[i] = entries[i] + ',' + laDate;
     }
-    console.log(workoutData)
+    console.log(workoutData);
     if(workoutData === undefined || workoutData === null){
       setWorkoutData([...entries]);
     }else{
@@ -58,21 +58,21 @@ export default function MicrophoneButton({
    * @param {Array} data - Array of workout entries to store
    */
   function storeWorkoutDataInLocalStorage(data) {
-    console.log(data)
+    console.log(data);
     try {
-      const currentDataInLocalStorage = localStorage.getItem('gymWhisperData')
+      const currentDataInLocalStorage = localStorage.getItem('gymWhisperData');
       if(currentDataInLocalStorage === null){
         const jsonString = JSON.stringify([data]);
         localStorage.setItem('gymWhisperData', jsonString);
-        return
+        return;
       }
-      const currentData = JSON.parse(currentDataInLocalStorage)
-      console.log(currentData)
-      const newData = [...currentData, ...data]
+      const currentData = JSON.parse(currentDataInLocalStorage);
+      console.log(currentData);
+      const newData = [...currentData, ...data];
       const jsonString = JSON.stringify(newData);
       localStorage.setItem('gymWhisperData', jsonString);
     } catch (e) {
-      console.error("Failed to store data in localStorage:", e);
+      console.error('Failed to store data in localStorage:', e);
     }
   }
   
@@ -85,13 +85,13 @@ export default function MicrophoneButton({
       // Set language for speech recognition
       const speechConfig = { 
         continuous: true,
-        language: language === 'fr' ? 'fr-FR' : 'en-US'
+        language: language === 'fr' ? 'fr-FR' : 'en-US',
       };
       startListening(speechConfig); 
     } else {
       stopListening(); 
-      if(transcript === ""){
-        return
+      if(transcript === ''){
+        return;
       }
       try {
         const response = await callGeminiAPI(transcript, language);
@@ -101,7 +101,7 @@ export default function MicrophoneButton({
         setToastVisible(true);
 
       } catch (error) {
-        console.error("LLM API error:", error);
+        console.error('LLM API error:', error);
       }
       resetTranscript();
     }
@@ -119,13 +119,13 @@ export default function MicrophoneButton({
       <motion.button
         whileTap={{ scale: 0.9 }}
         onClick={handleRecordToggle}
-        className={`record-btn${listening ? " recording" : ""}`}
+        className={`record-btn${listening ? ' recording' : ''}`}
         aria-pressed={listening}
-        aria-label={listening ? "Stop recording" : "Start recording"}
+        aria-label={listening ? 'Stop recording' : 'Start recording'}
       >
         {/* Simple microphone icon */}
         <svg 
-          className={`mic-icon ${listening ? "icon-white" : "icon-primary"}`}
+          className={`mic-icon ${listening ? 'icon-white' : 'icon-primary'}`}
           viewBox="0 0 24 24" 
           fill="currentColor"
           style={{ width: '80px', height: '80px' }}

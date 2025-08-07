@@ -1,12 +1,12 @@
 // src/WorkoutPanel.jsx
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Trash2, Edit2, Check, X, CheckCircle } from "lucide-react";
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowLeft, Trash2, Edit2, Check, X, CheckCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 // Import the new components
-import ConfirmationDialog from "./ConfirmationDialog";
-import WorkoutFinalizeView from "./WorkoutFinalizeView";
+import ConfirmationDialog from './ConfirmationDialog';
+import WorkoutFinalizeView from './WorkoutFinalizeView';
 
 /**
  * WorkoutPanel component: displays and manages workout entries
@@ -25,7 +25,7 @@ export default function WorkoutPanel({
 }) {
   const { t } = useLanguage();
   const [editingIndex, setEditingIndex] = useState(null);
-  const [editText, setEditText] = useState("");
+  const [editText, setEditText] = useState('');
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [finalizing, setFinalizing] = useState(false);
   const [finalizedWorkout, setFinalizedWorkout] = useState(null);
@@ -44,19 +44,19 @@ export default function WorkoutPanel({
    */
   const cancelEditing = () => {
     setEditingIndex(null);
-    setEditText("");
+    setEditText('');
   };
 
   /**
    * Saves the current edit to workout data
    */
   const saveEditing = () => {
-    if (editText.trim() === "") return;
+    if (editText.trim() === '') return;
     setWorkoutData((prev) =>
-      prev?.map((item, i) => (i === editingIndex ? editText.trim() : item))
+      prev?.map((item, i) => (i === editingIndex ? editText.trim() : item)),
     );
     setEditingIndex(null);
-    setEditText("");
+    setEditText('');
   };
 
   /**
@@ -64,21 +64,21 @@ export default function WorkoutPanel({
    * @param {Array} data - Array of workout entries to store
    */
   function storeWorkoutDataInLocalStorage(data) {
-    console.log(data)
+    console.log(data);
     try {
-      const currentDataInLocalStorage = localStorage.getItem('gymWhisperData')
+      const currentDataInLocalStorage = localStorage.getItem('gymWhisperData');
       if(currentDataInLocalStorage === null){
         const jsonString = JSON.stringify([data]);
         localStorage.setItem('gymWhisperData', jsonString);
-        return
+        return;
       }
-      const currentData = JSON.parse(currentDataInLocalStorage)
-      console.log(currentData)
-      const newData = [...currentData, ...data]
+      const currentData = JSON.parse(currentDataInLocalStorage);
+      console.log(currentData);
+      const newData = [...currentData, ...data];
       const jsonString = JSON.stringify(newData);
       localStorage.setItem('gymWhisperData', jsonString);
     } catch (e) {
-      console.error("Failed to store data in localStorage:", e);
+      console.error('Failed to store data in localStorage:', e);
     }
   }
 
@@ -90,7 +90,7 @@ export default function WorkoutPanel({
       alert(t('reviewRequired'));
       return;
     }
-    storeWorkoutDataInLocalStorage(workoutData)
+    storeWorkoutDataInLocalStorage(workoutData);
     setFinalizing(true);
     setFinalizedWorkout(workoutData);
   };
@@ -172,7 +172,7 @@ export default function WorkoutPanel({
           }
         }
         return entry;
-      })
+      }),
     );
   };
 
@@ -212,10 +212,10 @@ export default function WorkoutPanel({
           
           <motion.div
             className="panel"
-            initial={{ y: "100%" }}
+            initial={{ y: '100%' }}
             animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ type: "tween", duration: 0.3 }}
+            exit={{ y: '100%' }}
+            transition={{ type: 'tween', duration: 0.3 }}
             role="dialog"
             aria-modal="true"
             aria-labelledby="workout-panel-title"
@@ -223,11 +223,11 @@ export default function WorkoutPanel({
             <div
               className="panel-header"
             >
-              <h2 id="workout-panel-title">{finalizing ? "Finalize Workout" : "Your Workout"}</h2>
+              <h2 id="workout-panel-title">{finalizing ? 'Finalize Workout' : 'Your Workout'}</h2>
               <button
                 onClick={() => finalizing ? cancelFinalize() : setPanelOpen(false)}
                 className="icon-btn"
-                aria-label={finalizing ? "Cancel finalize" : "Close workout panel"}
+                aria-label={finalizing ? 'Cancel finalize' : 'Close workout panel'}
               >
                 <ArrowLeft size={24} className="rotated" />
               </button>
@@ -258,15 +258,15 @@ export default function WorkoutPanel({
                     </thead>
                     <tbody>
                       {workoutData?.map((entry, idx) => {
-                        const parts = entry.split(",");
-                        const workoutType = parts[0] || "";
-                        const reps = parts[1] || "";
-                        const weight = parts[2] || "";
-                        const needsReview = parts[3] === "NeedsReview";
+                        const parts = entry.split(',');
+                        const workoutType = parts[0] || '';
+                        const reps = parts[1] || '';
+                        const weight = parts[2] || '';
+                        const needsReview = parts[3] === 'NeedsReview';
                         const isEditing = editingIndex === idx;
 
                         return (
-                          <tr key={idx} className={isEditing ? "editing" : ""}>
+                          <tr key={idx} className={isEditing ? 'editing' : ''}>
                             <td>
                               {isEditing ? (
                                 <input
@@ -280,23 +280,23 @@ export default function WorkoutPanel({
                                 workoutType
                               )}
                             </td>
-                            <td>{isEditing ? "" : reps}</td>
-                            <td>{isEditing ? "" : weight}</td>
+                            <td>{isEditing ? '' : reps}</td>
+                            <td>{isEditing ? '' : weight}</td>
                             <td className="actions-cell">
                               {needsReview && !isEditing && (
-                                <div style={{display: "flex", alignItems: "center", gap: "10px"}}>
-                                <div className="review-section">
-                                  <span className="review-warning">{t('needsReview')}</span>
+                                <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+                                  <div className="review-section">
+                                    <span className="review-warning">{t('needsReview')}</span>
         
-                                </div>
+                                  </div>
                                   <button
-                                  onClick={() => approveEntry(idx)}
-                                  style={{backgroundColor: "green", color: "white", borderRadius: "5px", padding: "8px 10px", fontSize: "14px", borderWidth: "0px"}}
-                                  aria-label="Approve this entry"
-                                  title="Approve entry"
-                                >
+                                    onClick={() => approveEntry(idx)}
+                                    style={{backgroundColor: 'green', color: 'white', borderRadius: '5px', padding: '8px 10px', fontSize: '14px', borderWidth: '0px'}}
+                                    aria-label="Approve this entry"
+                                    title="Approve entry"
+                                  >
                                   Yes
-                                </button>
+                                  </button>
                                 </div>
                               )}
                               {isEditing ? (

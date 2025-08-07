@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
-import Sidebar from "./Side-bar";
-import MicrophoneButton from "./Microphone-button";
-import Header from "./Header-";
-import Toast from "./Toast"; 
-import WorkoutPanel from "./WorkoutPanel";
+import { useState, useEffect } from 'react';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import Sidebar from './Side-bar';
+import MicrophoneButton from './Microphone-button';
+import Header from './Header-';
+import Toast from './Toast'; 
+import WorkoutPanel from './WorkoutPanel';
 import { useLanguage } from '../contexts/LanguageContext';
 
 /**
@@ -36,7 +36,7 @@ export default function HomePage({ workoutData, setWorkoutData }) {
     listening,
     resetTranscript,
     browserSupportsSpeechRecognition,
-    isMicrophoneAvailable
+    isMicrophoneAvailable,
   } = useSpeechRecognition();
 
   /**
@@ -44,9 +44,9 @@ export default function HomePage({ workoutData, setWorkoutData }) {
    */
   useEffect(() => {
     if (isDark) {
-      document.documentElement.classList.add("dark");
+      document.documentElement.classList.add('dark');
     } else {
-      document.documentElement.classList.remove("dark");
+      document.documentElement.classList.remove('dark');
     }
     localStorage.setItem('darkMode', JSON.stringify(isDark));
   }, [isDark]);
@@ -95,8 +95,16 @@ export default function HomePage({ workoutData, setWorkoutData }) {
 
       {/* Sidebar overlay for click-outside-to-close */}
       <div 
-        className={`sidebar-overlay${menuOpen ? " open" : ""}`}
+        className={`sidebar-overlay${menuOpen ? ' open' : ''}`}
         onClick={handleSidebarOverlayClick}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            handleSidebarOverlayClick(e);
+          }
+        }}
+        aria-label="Close sidebar"
       />
 
       {/* Sidebar */}

@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI } from '@google/genai';
 //SET TEMPERATURE to 0
 //Dont let user ramble on, check before continuing
 const apiKey = process.env.REACT_APP_GEMINI_API_KEY;
@@ -81,7 +81,7 @@ Now summarize the following workout data:
 export async function summarizeWorkoutCSV(workoutData, language = 'en') {
   try {
     if (!Array.isArray(workoutData) || workoutData.length === 0) {
-      return { error: "Missing or invalid 'workoutData' parameter.", status: 400 };
+      return { error: 'Missing or invalid \'workoutData\' parameter.', status: 400 };
     }
     // Join the CSV entries with newlines for clarity
     const csvString = workoutData.join('\n');
@@ -90,14 +90,14 @@ export async function summarizeWorkoutCSV(workoutData, language = 'en') {
     const prompt = csvSummaryPrompt + languageInstruction + '\n' + csvString;
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
         thinkingConfig: {
           thinkingBudget: 0,
-          temperature: 0
+          temperature: 0,
         },
-      }
+      },
     });
 
     let summaryText = response?.text;
@@ -107,7 +107,7 @@ export async function summarizeWorkoutCSV(workoutData, language = 'en') {
 
     return { summary: summaryText };
   } catch (error) {
-    return { error: error?.message || "Internal Server Error", status: 500 };
+    return { error: error?.message || 'Internal Server Error', status: 500 };
   }
 }
 
@@ -120,19 +120,19 @@ export async function callGeminiAPI(text, language = 'en') {
     const languageInstruction = language === 'fr' ? '\n\nIMPORTANT: Reply in French.' : '';
     const prompt = csvDataPrompt + languageInstruction + '\n\n' + text;
 
-    if (typeof text !== "string" || !text.trim()) {
-      return { error: "Missing or invalid 'text' parameter.", status: 400 };
+    if (typeof text !== 'string' || !text.trim()) {
+      return { error: 'Missing or invalid \'text\' parameter.', status: 400 };
     }
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
         thinkingConfig: {
           thinkingBudget: 0,
-          temperature:0 // Disables thinking
+          temperature:0, // Disables thinking
         },
-        }
+      },
     });
 
     // The Gemini API response may have a .text or .candidates[0].content.parts[0].text
@@ -143,6 +143,6 @@ export async function callGeminiAPI(text, language = 'en') {
 
     return { result: resultText };
   } catch (error) {
-    return { error: error?.message || "Internal Server Error", status: 500 };
+    return { error: error?.message || 'Internal Server Error', status: 500 };
   }
 }

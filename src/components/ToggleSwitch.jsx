@@ -11,9 +11,9 @@ export default function ToggleSwitch({ isDark, onToggle }) {
     <button
       onClick={onToggle}
       aria-label="Toggle dark mode"
-      className={`toggle-switch${isDark ? " dark" : ""}`}
+      className={`toggle-switch${isDark ? ' dark' : ''}`}
     >
-      <span className={`thumb${isDark ? " dark" : ""}`} />
+      <span className={`thumb${isDark ? ' dark' : ''}`} />
     </button>
   );
 }

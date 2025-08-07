@@ -1,7 +1,7 @@
 // Sidebar.jsx
-import { ArrowLeft } from "lucide-react"; // Icon for closing the sidebar
-import { Link } from "react-router-dom"; // For navigation
-import ToggleSwitch from "./ToggleSwitch"; // Custom toggle component for dark/light mode
+import { ArrowLeft } from 'lucide-react'; // Icon for closing the sidebar
+import { Link } from 'react-router-dom'; // For navigation
+import ToggleSwitch from './ToggleSwitch'; // Custom toggle component for dark/light mode
 import { useLanguage } from '../contexts/LanguageContext';
 
 /**
@@ -18,7 +18,7 @@ export default function Sidebar({ menuOpen, setMenuOpen, isDark, setIsDark }) {
   
   return (
     // Apply 'open' class when sidebar is active
-    <aside className={`sidebar${menuOpen ? " open" : ""}`}>
+    <aside className={`sidebar${menuOpen ? ' open' : ''}`}>
       {/* Header with close button and title */}
       <div className="sidebar-header">
         <button

@@ -1,7 +1,7 @@
-import React from "react";
-import { Menu } from "lucide-react";
-import { useLanguage } from "../contexts/LanguageContext";
-import LogoBlue from "../assets/logoblue.png";
+import React from 'react';
+import { Menu } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
+import LogoBlue from '../assets/logoblue.png';
 
 /**
  * Header component: renders the app title, menu toggle, and language selector.
@@ -19,6 +19,18 @@ export default function Header({ onMenuToggle }) {
   const handleLanguageChange = (event) => {
     setLanguage(event.target.value);
   };
+
+  // Helper to detect mobile (simple, for this use-case)
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 500);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
     <header className="header">
@@ -53,8 +65,8 @@ export default function Header({ onMenuToggle }) {
         value={language}
         onChange={handleLanguageChange}
       >
-        <option value="en">{t('english')}</option>
-        <option value="fr">{t('french')}</option>
+        <option value="en">{isMobile ? 'En' : t('english')}</option>
+        <option value="fr">{isMobile ? 'Fr' : t('french')}</option>
       </select>
     </header>
   );

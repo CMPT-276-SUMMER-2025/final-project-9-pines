@@ -1,6 +1,6 @@
 // src/components/Toast.jsx
-import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 /**
  * Toast component for temporary feedback messages.
