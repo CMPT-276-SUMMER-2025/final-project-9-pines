@@ -57,6 +57,6 @@ npm start
   This will launch the application on http://localhost:3000
 
 #Project Links:
-- Live Website:
+- Live Website: https://cmpt-276-summer-2025.github.io/final-project-9-pines/
 - Final Report: 
 - GitHub Repo: https://github.com/CMPT-276-SUMMER-2025/final-project-9-pines.git
