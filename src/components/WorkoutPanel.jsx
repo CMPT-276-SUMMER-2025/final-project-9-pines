@@ -64,7 +64,6 @@ export default function WorkoutPanel({
    * @param {Array} data - Array of workout entries to store
    */
   function storeWorkoutDataInLocalStorage(data) {
-    console.log(data);
     try {
       const currentDataInLocalStorage = localStorage.getItem('gymWhisperData');
       if(currentDataInLocalStorage === null){
@@ -73,7 +72,6 @@ export default function WorkoutPanel({
         return;
       }
       const currentData = JSON.parse(currentDataInLocalStorage);
-      console.log(currentData);
       const newData = [...currentData, ...data];
       const jsonString = JSON.stringify(newData);
       localStorage.setItem('gymWhisperData', jsonString);
@@ -294,10 +292,7 @@ export default function WorkoutPanel({
                                   </div>
                                   <button
                                     onClick={() => {
-                                      
-                                      approveEntry(idx);
-                                      console.log(workoutData);
-          
+                                      approveEntry(idx);          
                                     }}
                                     style={{backgroundColor: 'green', color: 'white', borderRadius: '5px', padding: '8px 10px', fontSize: '14px', borderWidth: '0px'}}
                                     aria-label="Approve this entry"
