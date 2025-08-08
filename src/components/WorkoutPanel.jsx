@@ -271,20 +271,21 @@ export default function WorkoutPanel({
               <>
                 <div className="workout-table-wrapper">
                   <table className="workout-table" role="grid" aria-label="Workout entries">
-                    <thead>
-                      <tr>
-                        <th scope="col">Exercise</th>
-                        <th scope="col">Sets</th>
-                        <th scope="col" aria-label="Actions"></th>
-                      </tr>
-                    </thead>
                     <tbody>
                       {Object.entries(organizedWorkoutData).map(([workoutType, entries]) => (
                         <React.Fragment key={workoutType}>
-                          {/* Exercise Name Row */}
+                          {/* Exercise Name Row with Reps/Weight Labels */}
                           <tr className="exercise-header-row">
-                            <td colSpan="3" className="exercise-name-header">
+                            <td className="exercise-name-header">
                               {workoutType}
+                            </td>
+                            <td className="exercise-reps-header">
+                              <span className="exercise-reps-label">Reps</span>
+                            </td>
+                            <td className="exercise-weight-header">
+                              <span className="exercise-weight-label">Weight</span>
+                            </td>
+                            <td className="exercise-actions-header">
                             </td>
                           </tr>
                           {/* Individual Sets */}
@@ -297,7 +298,7 @@ export default function WorkoutPanel({
                             return (
                               <tr key={originalIndex} className={isEditing ? 'editing' : 'set-row'}>
                                 <td></td>
-                                <td className="set-info-cell">
+                                <td className="reps-cell">
                                   {isEditing ? (
                                     <input
                                       type="text"
@@ -307,26 +308,12 @@ export default function WorkoutPanel({
                                       aria-label="Edit workout entry"
                                     />
                                   ) : (
-                                    <div className="set-info-container">
-                                      <span className="set-info">
-                                        {reps} x {weight}
-                                      </span>
-                                      {needsReview && (
-                                        <div className="review-section">
-                                          <span className="review-warning">{t('needsReview')}</span>
-                                          <button
-                                            onClick={() => {
-                                              approveEntry(originalIndex);
-                                            }}
-                                            style={{backgroundColor: 'green', color: 'white', borderRadius: '5px', padding: '4px 8px', fontSize: '12px', borderWidth: '0px', marginLeft: '8px'}}
-                                            aria-label="Approve this entry"
-                                            title="Approve entry"
-                                          >
-                                            Yes
-                                          </button>
-                                        </div>
-                                      )}
-                                    </div>
+                                    <span className="reps-info">{reps}</span>
+                                  )}
+                                </td>
+                                <td className="weight-cell">
+                                  {!isEditing && (
+                                    <span className="weight-info">{weight}</span>
                                   )}
                                 </td>
                                 <td className="actions-cell">
@@ -338,7 +325,7 @@ export default function WorkoutPanel({
                                         aria-label="Save edit"
                                         title="Save"
                                       >
-                                        <Check size={20} />
+                                        <Check size={16} />
                                       </button>
                                       <button
                                         onClick={cancelEditing}
@@ -346,27 +333,41 @@ export default function WorkoutPanel({
                                         aria-label="Cancel edit"
                                         title="Cancel"
                                       >
-                                        <X size={20} />
+                                        <X size={16} />
                                       </button>
                                     </>
                                   ) : (
                                     <>
-                                      <button
-                                        onClick={() => startEditing(originalIndex)}
-                                        className="icon-btn action-btn"
-                                        aria-label={`Edit workout entry ${originalIndex + 1}`}
-                                        title="Edit"
-                                      >
-                                        <Edit2 size={20} />
-                                      </button>
-                                      <button
-                                        onClick={() => removeEntry(originalIndex)}
-                                        className="icon-btn action-btn"
-                                        aria-label={`Delete workout entry ${originalIndex + 1}`}
-                                        title="Delete"
-                                      >
-                                        <Trash2 size={20} />
-                                      </button>
+                                      {needsReview && (
+                                        <div className="review-section">
+                                          <span className="review-warning">{t('needsReview')}</span>
+                                          <button
+                                            onClick={() => approveEntry(originalIndex)}
+                                            className="approve-btn"
+                                            aria-label="Approve workout entry"
+                                          >
+                                            ✓
+                                          </button>
+                                        </div>
+                                      )}
+                                      <div className="action-buttons">
+                                        <button
+                                          onClick={() => startEditing(originalIndex)}
+                                          className="icon-btn action-btn"
+                                          aria-label={`Edit workout entry ${originalIndex + 1}`}
+                                          title="Edit"
+                                        >
+                                          <Edit2 size={16} />
+                                        </button>
+                                        <button
+                                          onClick={() => removeEntry(originalIndex)}
+                                          className="icon-btn action-btn"
+                                          aria-label={`Delete workout entry ${originalIndex + 1}`}
+                                          title="Delete"
+                                        >
+                                          <Trash2 size={16} />
+                                        </button>
+                                      </div>
                                     </>
                                   )}
                                 </td>

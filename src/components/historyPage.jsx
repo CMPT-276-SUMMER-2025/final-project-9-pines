@@ -34,7 +34,7 @@ export default function HistoryPage() {
   const [summaryText, setSummaryText] = React.useState('');
   const [loadingSummary, setLoadingSummary] = React.useState(false);
   const [summaryError, setSummaryError] = React.useState('');
-  
+
   // State for collapsible sections
   const [expandedDates, setExpandedDates] = useState(new Set());
   const [expandedTimes, setExpandedTimes] = useState(new Set());
@@ -362,7 +362,7 @@ export default function HistoryPage() {
         <div className="history-container">
           <h1>{t('workoutHistory')}</h1>
           <p>{t('viewPastSessions')}</p>
-
+          
 
           {/* Show summary button and back link side by side */}
           {workoutHistory && workoutHistory.length > 0 && (
@@ -375,7 +375,7 @@ export default function HistoryPage() {
               {loadingSummary ? 'Reporting...' : t('performanceReport')}
             </button>
           )}
-          
+
           {/* Summary popup/modal */}
           {showPerformanceReport && (
             <div
@@ -438,41 +438,21 @@ export default function HistoryPage() {
           ) : (
             <div className="history-table-wrapper">
               <table className="workout-table" role="grid" aria-label="Workout history">
-                <thead>
-                  <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Time</th>
-                    <th scope="col">Exercise</th>
-                    <th scope="col">Sets</th>
-                  </tr>
-                </thead>
+
                 <tbody>
                   {Object.entries(organizedWorkoutData).map(([date, timeData]) => {
-                    const isDateExpanded = expandedDates.has(date);
                     return (
                       <React.Fragment key={date}>
                         {/* Date Header Row */}
-                        <tr 
-                          className="date-header-row clickable"
-                          onClick={() => toggleDate(date)}
-                          role="button"
-                          tabIndex={0}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                              toggleDate(date);
-                            }
-                          }}
-                          aria-label={`Toggle ${formatDate(date)}`}
-                        >
-                          <td colSpan="4" className="date-header">
+                        <tr className="date-header-row">
+                          <td colSpan="3" className="date-header">
                             <div className="header-content">
-                              {isDateExpanded ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
                               <span>{formatDate(date)}</span>
                             </div>
                           </td>
                         </tr>
-                        {/* Time and Exercise Data - Only show if date is expanded */}
-                        {isDateExpanded && Object.entries(timeData).map(([time, exerciseData]) => {
+                        {/* Time and Exercise Data - Always show */}
+                        {Object.entries(timeData).map(([time, exerciseData]) => {
                           const dateTimeKey = `${date}-${time}`;
                           const isTimeExpanded = expandedTimes.has(dateTimeKey);
                           return (
@@ -490,42 +470,45 @@ export default function HistoryPage() {
                                 }}
                                 aria-label={`Toggle ${time}`}
                               >
-                                <td></td>
                                 <td colSpan="3" className="time-header">
                                   <div className="header-content">
                                     {isTimeExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-                                    <span>{time}</span>
+                                    <div className="time-header-content">
+                                      <span className="workout-number">Workout {Object.keys(timeData).indexOf(time) + 1}</span>
+                                      <span className="recorded-time">Recorded at {time}</span>
+                                    </div>
                                   </div>
                                 </td>
                               </tr>
                               {/* Exercise Data - Only show if time is expanded */}
                               {isTimeExpanded && Object.entries(exerciseData).map(([exerciseType, sets]) => (
                                 <React.Fragment key={`${date}-${time}-${exerciseType}`}>
-                                  {/* Exercise Name Row */}
+                                  {/* Exercise Name Row with Reps/Weight */}
                                   <tr className="exercise-header-row">
-                                    <td></td>
-                                    <td></td>
-                                    <td colSpan="2" className="exercise-name-header">
+                                    <td className="exercise-name-header">
                                       {exerciseType}
+                                    </td>
+                                    <td className="exercise-reps-header">
+                                      <span className="exercise-reps-label">Reps</span>
+                                    </td>
+                                    <td className="exercise-weight-header">
+                                      <span className="exercise-weight-label">Weight</span>
                                     </td>
                                   </tr>
                                   {/* Individual Sets */}
                                   {sets.map(({ entry, originalIndex, reps, weight, needsReview }) => (
                                     <tr key={originalIndex} className="set-row">
                                       <td></td>
-                                      <td></td>
-                                      <td></td>
-                                      <td className="set-info-cell">
-                                        <div className="set-info-container">
-                                          <span className="set-info">
-                                            {reps} x {weight}
-                                          </span>
-                                          {needsReview && (
-                                            <div className="review-section">
-                                              <span className="review-warning">{t('needsReview')}</span>
-                                            </div>
-                                          )}
-                                        </div>
+                                      <td className="reps-cell">
+                                        <span className="reps-info">{reps}</span>
+                                        {needsReview && (
+                                          <div className="review-section">
+                                            <span className="review-warning">{t('needsReview')}</span>
+                                          </div>
+                                        )}
+                                      </td>
+                                      <td className="weight-cell">
+                                        <span className="weight-info">{weight}</span>
                                       </td>
                                     </tr>
                                   ))}
@@ -541,7 +524,7 @@ export default function HistoryPage() {
               </table>
             </div>
           )}
-            
+          
           <Link to="/" className="back-btn" style={{ flexShrink: 0 }}>
             {t('backToHome')}
           </Link>

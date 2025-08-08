@@ -112,28 +112,28 @@ describe('Translation Dictionary', () => {
   });
 
 
-// Test for workout summary to ensure it replies with a string
-describe('Workout Summary', () => {
-  test('summarizeWorkoutCSV should return a string summary', async () => {
+  // Test for workout summary to ensure it replies with a string
+  describe('Workout Summary', () => {
+    test('summarizeWorkoutCSV should return a string summary', async () => {
     // Mock workout CSV data
-    const csvData = `workoutType,Reps,Weight
+      const csvData = `workoutType,Reps,Weight
 Bench Press,10,135
 Squat,8,185
 Deadlift,5,225`;
 
-    // If summarizeWorkoutCSV is not imported, skip the test
-    if (typeof summarizeWorkoutCSV !== 'function') {
+      // If summarizeWorkoutCSV is not imported, skip the test
+      if (typeof summarizeWorkoutCSV !== 'function') {
       // eslint-disable-next-line no-console
-      console.warn('summarizeWorkoutCSV not available, skipping test');
-      return;
-    }
+        console.warn('summarizeWorkoutCSV not available, skipping test');
+        return;
+      }
 
-    const summary = await summarizeWorkoutCSV(csvData);
+      const summary = await summarizeWorkoutCSV(csvData);
 
-    expect(typeof summary).toBe('string');
-    expect(summary.length).toBeGreaterThan(0);
+      expect(typeof summary).toBe('string');
+      expect(summary.length).toBeGreaterThan(0);
+    });
   });
-});
 
 });
  

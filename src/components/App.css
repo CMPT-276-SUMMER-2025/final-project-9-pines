@@ -56,6 +56,7 @@ body {
   /* Blue-600 for hover states */
   --color-accent-hover: #1d4ed8;
   --color-primary-hover: #1d4ed8;
+  --color-blue-50: #eff6ff;
   --color-blue-100: #dbeafe;
   --color-blue-200: #bfdbfe;
   --color-blue-300: #93c5fd;
@@ -92,8 +93,7 @@ html.dark {
   --color-text-secondary: #94a3b8;
   --color-accent: #93c5fd;
   /* Blue-300 for hover states in dark mode */
-  --color-accent-hover: #60a5fa;
-  --color-primary-hover: #60a5fa;
+  --color-blue-50: #1e3a8a;
   --color-blue-100: #2563eb;
   --color-blue-200: #3b82f6;
   --color-blue-300: #60a5fa;
@@ -810,49 +810,288 @@ html.dark .panel {
   font-size: 18px;
 }
 
+
+
+/* Profile Page Styles */
+.profile-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: var(--color-surface);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px var(--shadow-light);
+  margin-top: 2rem;
+}
+
+.profile-container h1 {
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+.profile-container p {
+  color: var(--color-text);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.profile-info,
+.profile-stats {
+  background: var(--color-surface-variant);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  border: 1px solid var(--color-border);
+}
+
+.profile-info h2,
+.profile-stats h2 {
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.profile-info p,
+.profile-stats p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.back-btn {
+  display: inline-block;
+  background: var(--color-primary);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 2rem;
+  transition: background-color 0.3s ease;
+}
+
+.back-btn:hover {
+  background: var(--color-accent);
+  text-decoration: none;
+  color: white;
+}
+
+/* Needs Review Styling */
+.review-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ff9800;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin: 4px 0;
+}
+
+.review-warning {
+  color: #fff !important;
+  font-weight: 600;
+  font-style: italic;
+  font-size: 14px;
+  margin: 0;
+}
+
+.approve-btn {
+  background: #4caf50;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: white;
+}
+
+.approve-btn:hover {
+  background: #45a049;
+}
+
+
+
+
+
+/* Dark mode background adjustments */
+html.dark {
+  --color-bg: #0a0f1a;
+  /* Darker blue background */
+  --color-bg-layer1: #1a1f2a;
+  /* Darker blue layer */
+  --color-bg-layer2: #2a2f3a;
+  /* Darker blue layer */
+  --color-text: #f1f5f9;
+
+  /* Blue color scheme for dark mode */
+  --color-primary: #60a5fa;
+  /* Blue-400 */
+  --color-surface: #1a1f2a;
+  --color-surface-variant: #2a2f3a;
+  --color-border: #3a3f4a;
+  --color-toast-bg: #fbbf24dd;
+  --color-toast-text: #000000;
+  --color-recording: #f87171;
+  /* Red for recording state in dark mode */
+  --color-text-secondary: #94a3b8;
+  --color-accent: #93c5fd;
+  /* Blue-300 for hover states in dark mode */
+  --color-blue-100: #1e3a8a;
+  --color-blue-200: #1e40af;
+  --color-blue-300: #1d4ed8;
+  --color-blue-400: #2563eb;
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #60a5fa;
+  --color-blue-700: #93c5fd;
+  --color-blue-800: #bfdbfe;
+  --color-blue-900: #dbeafe;
+
+  --shadow-light: rgba(255, 255, 255, 0.05);
+  --shadow-dark: rgba(255, 255, 255, 0.15);
+}
+
+
+
+/* Overlay for clicking outside to close */
+.panel-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 99;
+  backdrop-filter: blur(2px);
+}
+
+/* Header logo image */
+.header-logo {
+  width: 200px;
+  height: auto;
+  max-height: 50px;
+  margin-right: 12px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Minimalistic microphone icon */
+.mic-icon {
+  width: 80px;
+  height: 80px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  transition: all 0.3s ease;
+}
+
+.record-btn:hover .mic-icon {
+  transform: scale(1.05);
+}
+
+.record-btn.recording .mic-icon {
+  opacity: 0;
+}
+
+/* Pulse animation for recording state */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Workout table styling improvements */
 .workout-table-wrapper {
   overflow-x: auto;
   flex: 1;
   display: flex;
   flex-direction: column;
+  background: var(--color-surface);
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  margin: 0.25rem 0;
+  box-shadow: 0 2px 8px var(--shadow-light);
+  max-height: 75vh;
+}
+
+html.dark .workout-table-wrapper {
+  box-shadow: 0 2px 8px var(--shadow-dark);
 }
 
 .workout-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 17px;
+  font-size: 12px;
   table-layout: fixed;
+  background: var(--color-surface);
 }
 
 .workout-table th,
 .workout-table td {
-  border-bottom: 1.5px solid var(--color-border);
-  padding: 14px 18px;
+  border-bottom: 1px solid var(--color-border);
+  padding: 8px 12px;
   text-align: left;
   vertical-align: middle;
   color: var(--color-text);
   transition: background-color 0.3s ease;
 }
 
-/* Column width controls for history table */
+/* Column width controls for workout panel table */
 .workout-table th:nth-child(1),
 .workout-table td:nth-child(1) {
-  width: 15%;
+  width: 30%;
 }
 
 .workout-table th:nth-child(2),
 .workout-table td:nth-child(2) {
-  width: 15%;
+  width: 25%;
 }
 
 .workout-table th:nth-child(3),
 .workout-table td:nth-child(3) {
-  width: 20%;
+  width: 25%;
 }
 
 .workout-table th:nth-child(4),
 .workout-table td:nth-child(4) {
-  width: 50%;
+  width: 20%;
+}
+
+/* Column width controls for history table - 3 columns only */
+.history-table-wrapper .workout-table th:nth-child(1),
+.history-table-wrapper .workout-table td:nth-child(1) {
+  width: 35%;
+}
+
+.history-table-wrapper .workout-table th:nth-child(2),
+.history-table-wrapper .workout-table td:nth-child(2) {
+  width: 32.5%;
+}
+
+.history-table-wrapper .workout-table th:nth-child(3),
+.history-table-wrapper .workout-table td:nth-child(3) {
+  width: 32.5%;
+}
+
+/* History table reps and weight column styling */
+.history-table-wrapper .workout-table th:nth-child(2),
+.history-table-wrapper .workout-table td:nth-child(2),
+.history-table-wrapper .workout-table th:nth-child(3),
+.history-table-wrapper .workout-table td:nth-child(3) {
+  text-align: center;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .workout-table th {
@@ -860,44 +1099,89 @@ html.dark .panel {
   color: var(--color-text-secondary);
   letter-spacing: 0.03em;
   font-variant: small-caps;
+  background: var(--color-surface-variant);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  font-size: 14px;
 }
 
-/* Fix hover highlights for better visibility */
+/* Remove hover effects for workout panel table */
 .workout-table tbody tr:hover {
-  background-color: var(--color-blue-100);
-  border-radius: 8px;
+  background-color: transparent !important;
 }
 
-html.dark .workout-table tbody tr:hover {
-  background-color: rgba(59, 130, 246, 0.1);
+/* Remove hover effects for history table since it's read-only */
+.history-table-wrapper .workout-table tbody tr:hover {
+  background-color: transparent;
+}
+
+html.dark .history-table-wrapper .workout-table tbody tr:hover {
+  background-color: transparent;
 }
 
 /* Actions cell */
 .actions-cell {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   justify-content: flex-end;
+  align-items: center;
+  padding-right: 12px;
+  width: 100%;
+  text-align: right;
+  min-width: 120px;
+}
+
+/* Ensure the actions column takes full width and aligns content properly */
+.workout-table td:nth-child(4) {
+  text-align: right;
+  padding-right: 12px;
+}
+
+.workout-table th:nth-child(4) {
+  text-align: right;
+  padding-right: 12px;
+}
+
+/* Force buttons to be positioned more to the right */
+.workout-table .actions-cell {
+  justify-content: flex-end !important;
+  padding-right: 12px !important;
+  width: 100% !important;
+}
+
+.workout-table .action-btn {
+  margin: 0;
+}
+
+/* Ensure the actions column header is also right-aligned */
+.workout-table th:nth-child(4) {
+  text-align: right !important;
+  padding-right: 12px !important;
 }
 
 /* Date Header Row */
 .date-header-row {
-  background-color: var(--color-accent);
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  background-color: var(--color-primary);
+  color: white !important;
+  font-weight: 600;
+  border-bottom: 2px solid var(--color-border);
+  cursor: default;
 }
 
 .date-header-row:hover {
-  background-color: var(--color-accent-hover);
+  background-color: var(--color-primary) !important;
 }
 
 .date-header {
   font-weight: 700;
-  font-size: 16px;
-  padding: 16px 18px !important;
+  font-size: 18px;
+  padding: 20px 24px !important;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 2px solid var(--color-accent) !important;
+  border-bottom: none !important;
+  color: white !important;
+  text-align: center;
 }
 
 .header-content {
@@ -908,61 +1192,213 @@ html.dark .workout-table tbody tr:hover {
 
 .header-content svg {
   transition: transform 0.2s ease;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+/* Time header content layout */
+.time-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  flex: 1;
+}
+
+.workout-number {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.recorded-time {
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  font-size: 0.9em;
 }
 
 /* Time Header Row */
 .time-header-row {
-  background-color: var(--color-primary);
-  color: white;
+  background-color: var(--color-surface);
+  color: var(--color-text);
   cursor: pointer;
   transition: background-color 0.2s ease;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .time-header-row:hover {
-  background-color: var(--color-primary-hover);
+  background-color: var(--color-blue-50);
 }
 
 .time-header {
   font-weight: 600;
   font-size: 16px;
-  padding: 12px 18px !important;
+  padding: 16px 20px !important;
   letter-spacing: 0.03em;
-  border-bottom: 1px solid var(--color-primary) !important;
+  border-bottom: none !important;
+  color: var(--color-text);
 }
 
-/* Exercise Header Row */
+/* Exercise Header Row - Improved styling */
 .exercise-header-row {
-  background-color: var(--color-primary);
-  color: white;
+  background-color: #e3f2fd;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-primary);
+}
+
+html.dark .exercise-header-row {
+  background-color: var(--color-surface-variant);
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-primary);
 }
 
 .exercise-name-header {
-  font-weight: 700;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 16px 96px !important;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  border-bottom: none !important;
+  color: var(--color-text);
+}
+
+.exercise-reps-header,
+.exercise-weight-header {
+  text-align: center;
+  padding: 16px 12px !important;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--color-text);
+  background-color: #e3f2fd;
+  border-bottom: none !important;
+}
+
+.exercise-reps-label,
+.exercise-weight-label,
+.exercise-actions-label {
+  display: block;
+  text-align: center;
+}
+
+.exercise-actions-header {
+  text-align: center;
+  padding: 16px 12px !important;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--color-text);
+  background-color: #e3f2fd;
+  border-bottom: none !important;
+}
+
+.actions-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+}
+
+.actions-cell .review-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.actions-cell .review-warning {
+  font-size: 11px;
+  color: var(--color-warning);
+  font-weight: 500;
+  text-align: center;
+}
+
+.actions-cell .approve-btn {
+  background-color: #4CAF50 !important;
+  color: white !important;
+  border: none !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  min-width: 24px !important;
+  height: 24px !important;
+}
+
+.actions-cell .approve-btn:hover {
+  background-color: #45a049 !important;
+}
+
+.actions-cell .action-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+/* Reps and Weight cells */
+.reps-cell,
+.weight-cell {
+  padding: 8px 12px;
+  vertical-align: middle;
+  text-align: center;
+  background-color: var(--color-surface);
+}
+
+.reps-info,
+.weight-info {
   font-size: 14px;
-  padding: 12px 18px !important;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-bottom: 2px solid var(--color-primary) !important;
+  color: var(--color-text);
+  font-weight: 500;
+  text-align: center;
+  display: block;
+  line-height: 1.4;
+}
+
+/* Ensure proper centering for reps and weight columns */
+.workout-table th:nth-child(2),
+.workout-table td:nth-child(2) {
+  text-align: center;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.workout-table th:nth-child(3),
+.workout-table td:nth-child(3) {
+  text-align: center;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+/* Actions column styling */
+.workout-table th:nth-child(4),
+.workout-table td:nth-child(4) {
+  text-align: center;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 /* Set Row */
 .set-row {
   border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.2s ease;
+  background-color: var(--color-surface);
 }
 
 .set-row:hover {
-  background-color: var(--color-blue-100);
+  background-color: transparent;
 }
 
 html.dark .set-row:hover {
-  background-color: rgba(59, 130, 246, 0.1);
+  background-color: transparent;
 }
 
 .set-info-cell {
-  padding: 12px 18px;
+  padding: 8px 12px;
   vertical-align: middle;
   width: 100%;
-  min-width: 200px;
+  min-width: 150px;
   max-width: none;
 }
 
@@ -971,65 +1407,281 @@ html.dark .set-row:hover {
   align-items: center;
   gap: 8px;
   min-width: 0;
-  /* Allow container to shrink */
   flex: 1;
-  /* Take available space */
   width: 100%;
   max-width: none;
 }
 
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {
+  .workout-table-wrapper {
+    margin: 0.125rem 0;
+    border-radius: 8px;
+    max-height: 70vh;
+  }
+  
+  .workout-table {
+    font-size: 11px;
+  }
+  
+  .workout-table th,
+  .workout-table td {
+    padding: 6px 8px;
+  }
+  
+  .workout-table th {
+    font-size: 12px;
+  }
+  
+  /* Adjust column widths for mobile */
+  .workout-table th:nth-child(1),
+  .workout-table td:nth-child(1) {
+    width: 25%;
+  }
+  
+  .workout-table th:nth-child(2),
+  .workout-table td:nth-child(2) {
+    width: 25%;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  
+  .workout-table th:nth-child(3),
+  .workout-table td:nth-child(3) {
+    width: 25%;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  
+  .workout-table th:nth-child(4),
+  .workout-table td:nth-child(4) {
+    width: 25%;
+  }
+  
+  .reps-info,
+  .weight-info {
+    font-size: 13px;
+  }
+  
+  .exercise-name-header {
+    font-size: 12px;
+  }
+  
   .set-info-container {
-    gap: 12px;
-    /* More space between elements */
+    gap: 6px;
     flex-wrap: wrap;
-    /* Allow wrapping if needed */
   }
 
   .set-info {
-    font-size: 16px;
-    /* Slightly larger text on mobile */
-    min-width: 80px;
-    /* Ensure minimum width for readability */
+    font-size: 11px;
+    min-width: 50px;
   }
 
   .review-section {
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 4px;
   }
 
   .review-warning {
-    font-size: 14px;
+    font-size: 10px;
   }
 
   /* Make action buttons slightly larger on mobile */
   .action-btn {
-    padding: 8px;
-    min-width: 44px;
-    /* Touch-friendly minimum size */
-    min-height: 44px;
+    padding: 4px;
+    min-width: 28px;
+    min-height: 28px;
   }
 
   /* Adjust table cell padding for mobile */
   .set-info-cell {
-    padding: 16px 12px;
+    padding: 6px 8px;
   }
 
   .actions-cell {
-    gap: 8px;
+    gap: 6px;
+    padding-right: 8px;
+    padding-left: 4px;
+    justify-content: flex-end;
+    width: 100% !important;
+  }
+  
+  /* Mobile review section fixes */
+  .actions-cell .review-section {
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 4px;
+    padding: 6px 8px;
+    min-width: 0;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .actions-cell .review-warning {
+    font-size: 10px;
+    line-height: 1.3;
+    text-align: center;
+    word-wrap: break-word;
+    max-width: 100%;
+    padding: 0 4px;
+  }
+  
+  .actions-cell .approve-btn {
+    background-color: #4CAF50 !important;
+    color: white !important;
+    border: none !important;
+    padding: 3px 6px !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease !important;
+    font-size: 9px !important;
+    font-weight: 600 !important;
+    min-width: 18px !important;
+    height: 18px !important;
+    white-space: nowrap !important;
+  }
+  
+  .actions-cell .approve-btn:hover {
+    background-color: #45a049 !important;
+  }
+  
+  .actions-cell .action-buttons {
+    gap: 3px;
+  }
+  
+  /* Adjust header padding for mobile */
+  .date-header {
+    padding: 14px 16px !important;
+    font-size: 14px;
+  }
+  
+  .time-header {
+    padding: 16px 16px !important;
+    font-size: 15px;
+  }
+  
+  .exercise-name-header {
+    padding: 8px 8px !important;
+    font-size: 11px;
+  }
+  
+  /* Improve spacing for history dropdowns */
+  .history-table-wrapper .date-header-row {
+    margin-bottom: 2px;
+  }
+  
+  .history-table-wrapper .time-header-row {
+    margin-bottom: 1px;
+  }
+  
+  .history-table-wrapper .set-row {
+    padding: 4px 0;
+  }
+  
+  .history-table-wrapper .reps-cell,
+  .history-table-wrapper .weight-cell {
+    padding: 6px 8px;
+  }
+}
+
+/* Medium screen adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .workout-table th:nth-child(1),
+  .workout-table td:nth-child(1) {
+    width: 25%;
+  }
+  
+  .workout-table th:nth-child(2),
+  .workout-table td:nth-child(2) {
+    width: 25%;
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+  
+  .workout-table th:nth-child(3),
+  .workout-table td:nth-child(3) {
+    width: 25%;
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+  
+  .workout-table th:nth-child(4),
+  .workout-table td:nth-child(4) {
+    width: 25%;
+  }
+  
+  .reps-info,
+  .weight-info {
+    font-size: 14px;
+  }
+  
+  .workout-table th {
+    font-size: 13px;
+  }
+  
+  .exercise-name-header {
+    font-size: 13px;
+  }
+}
+
+/* Large screen adjustments */
+@media (min-width: 1025px) {
+  .workout-table th:nth-child(1),
+  .workout-table td:nth-child(1) {
+    width: 30%;
+  }
+  
+  .workout-table th:nth-child(2),
+  .workout-table td:nth-child(2) {
+    width: 25%;
+    padding-left: 12px;
     padding-right: 12px;
+  }
+  
+  .workout-table th:nth-child(3),
+  .workout-table td:nth-child(3) {
+    width: 25%;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  
+  .workout-table th:nth-child(4),
+  .workout-table td:nth-child(4) {
+    width: 20%;
+  }
+  
+  .reps-info,
+  .weight-info {
+    font-size: 15px;
+  }
+  
+  .workout-table th {
+    font-size: 15px;
+  }
+  
+  .exercise-name-header {
+    font-size: 15px;
   }
 }
 
 .set-info {
-  font-size: 15px;
+  font-size: 12px;
   color: var(--color-text);
   font-weight: 500;
 }
 
 html.dark .exercise-name-header {
-  color: white;
+  color: var(--color-text);
+  background-color: var(--color-surface-variant);
+}
+
+html.dark .exercise-reps-header,
+html.dark .exercise-weight-header,
+html.dark .exercise-actions-header {
+  color: var(--color-text);
+  background-color: var(--color-surface-variant);
 }
 
 html.dark .set-info {
@@ -1041,13 +1693,15 @@ html.dark .set-info {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 6px;
+  padding: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--color-primary);
-  border-radius: 8px;
+  border-radius: 4px;
   transition: background-color 0.3s ease, color 0.3s ease;
+  min-width: 28px;
+  min-height: 28px;
 }
 
 .action-btn:hover,
@@ -1066,12 +1720,19 @@ html.dark .action-btn:focus-visible {
 /* Editing input */
 .edit-input {
   width: 100%;
-  padding: 8px 12px;
+  padding: 6px 10px;
   border: 1px solid var(--color-border);
   border-radius: 4px;
   background: var(--color-surface);
   color: var(--color-text);
-  font-size: 14px;
+  font-size: 12px;
+  transition: border-color 0.3s ease;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
 }
 
 /* Profile Page Styles */
@@ -1179,20 +1840,19 @@ html.dark .action-btn:focus-visible {
 
 /* History Page Styles */
 .history-container {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
   background: var(--color-surface);
-  border-radius: 12px;
-  box-shadow: 0 4px 6px var(--shadow-light);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px var(--shadow-light);
   margin-top: 2rem;
   color: var(--color-text);
   width: 90%;
-  max-width: 1000px;
 }
 
 html.dark .history-container {
-  box-shadow: 0 4px 6px var(--shadow-dark);
+  box-shadow: 0 4px 12px var(--shadow-dark);
 }
 
 .history-container h1 {
@@ -1200,20 +1860,25 @@ html.dark .history-container {
   margin-bottom: 1rem;
   font-size: 2.5rem;
   text-align: center;
+  font-weight: 700;
 }
 
 .history-container p {
   color: var(--color-text);
   line-height: 1.6;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   text-align: center;
+  font-size: 1.1rem;
 }
 
 .empty-history {
   text-align: center;
-  padding: 3rem 1rem;
+  padding: 4rem 1rem;
   color: var(--color-text-secondary);
   font-style: italic;
+  background: var(--color-surface-variant);
+  border-radius: 12px;
+  margin: 2rem 0;
 }
 
 .empty-history p {
@@ -1225,52 +1890,104 @@ html.dark .history-container {
   overflow-x: auto;
   margin: 2rem 0;
   background: var(--color-surface-variant);
-  border-radius: 8px;
+  border-radius: 12px;
   border: 1px solid var(--color-border);
+  box-shadow: 0 2px 8px var(--shadow-light);
 }
 
-/* Dark mode background adjustments */
-html.dark {
-  --color-bg: #0a0f1a;
-  /* Darker blue background */
-  --color-bg-layer1: #1a1f2a;
-  /* Darker blue layer */
-  --color-bg-layer2: #2a2f3a;
-  /* Darker blue layer */
-  --color-text: #f1f5f9;
+html.dark .history-table-wrapper {
+  box-shadow: 0 2px 8px var(--shadow-dark);
+}
 
-  /* Blue color scheme for dark mode */
-  --color-primary: #60a5fa;
-  /* Blue-400 */
-  --color-surface: #1a1f2a;
-  --color-surface-variant: #2a2f3a;
-  --color-border: #3a3f4a;
-  --color-toast-bg: #fbbf24dd;
-  --color-toast-text: #000000;
-  --color-recording: #f87171;
-  /* Red for recording state in dark mode */
-  --color-text-secondary: #94a3b8;
-  --color-accent: #93c5fd;
-  /* Blue-300 for hover states in dark mode */
-  --color-blue-100: #1e3a8a;
-  --color-blue-200: #1e40af;
-  --color-blue-300: #1d4ed8;
-  --color-blue-400: #2563eb;
-  --color-blue-500: #3b82f6;
-  --color-blue-600: #60a5fa;
-  --color-blue-700: #93c5fd;
-  --color-blue-800: #bfdbfe;
-  --color-blue-900: #dbeafe;
+/* History specific dropdown improvements */
+.history-table-wrapper .date-header-row {
+  border-bottom: 2px solid var(--color-border);
+  margin-bottom: 1px;
+}
 
-  --shadow-light: rgba(255, 255, 255, 0.05);
-  --shadow-dark: rgba(255, 255, 255, 0.15);
+.history-table-wrapper .time-header-row {
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1px;
+}
+
+.history-table-wrapper .exercise-header-row {
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1px;
+}
+
+.history-table-wrapper .set-row {
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.history-table-wrapper .set-row:last-child {
+  border-bottom: none;
+}
+
+/* History specific reps and weight styling */
+.history-table-wrapper .reps-cell,
+.history-table-wrapper .weight-cell {
+  text-align: center;
+  padding: 10px 12px;
+  vertical-align: middle;
+}
+
+.history-table-wrapper .reps-info,
+.history-table-wrapper .weight-info {
+  text-align: center;
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text);
+  line-height: 1.4;
+}
+
+/* History exercise header styling to match Your Workouts */
+.history-table-wrapper .exercise-header-row {
+  background-color: #e3f2fd;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-primary);
+}
+
+.history-table-wrapper .exercise-name-header {
+  background-color: #e3f2fd;
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: 16px;
+  padding: 16px 20px !important;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  border-bottom: none !important;
+  text-align: left;
+  padding-left: 48px !important;
+}
+
+html.dark .history-table-wrapper .exercise-header-row {
+  background-color: var(--color-surface-variant);
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-primary);
+}
+
+html.dark .history-table-wrapper .exercise-name-header {
+  background-color: var(--color-surface-variant);
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: 16px;
+  padding: 16px 20px !important;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  border-bottom: none !important;
+  text-align: left;
+  padding-left: 48px !important;
 }
 
 /* History page buttons */
 .summary-btn {
   background-color: var(--color-primary) !important;
   color: white !important;
-  padding: 12px 24px !important;
+  padding: 14px 28px !important;
   border-radius: 12px !important;
   border: none !important;
   font-size: 16px !important;
@@ -1278,12 +1995,13 @@ html.dark {
   cursor: pointer !important;
   transition: all 0.3s ease !important;
   box-shadow: 0 4px 12px var(--shadow-light) !important;
+  margin: 1rem 0 !important;
 }
 
 .summary-btn:hover {
   background-color: var(--color-accent) !important;
   box-shadow: 0 6px 18px var(--shadow-light) !important;
-  transform: translateY(-1px) !important;
+  transform: translateY(-2px) !important;
 }
 
 html.dark .summary-btn {
@@ -1299,10 +2017,13 @@ html.dark .summary-btn:hover {
   background-color: var(--color-surface) !important;
   color: var(--color-text) !important;
   border: 1px solid var(--color-border) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px var(--shadow-dark) !important;
 }
 
 .summary-popup h2 {
   color: var(--color-primary) !important;
+  margin-bottom: 1.5rem !important;
 }
 
 .summary-popup button {
@@ -1320,57 +2041,75 @@ html.dark .summary-btn:hover {
   background-color: var(--color-accent) !important;
 }
 
-/* Overlay for clicking outside to close */
-.panel-overlay {
+/* Panel styling improvements */
+.panel {
   position: fixed;
-  top: 0;
+  bottom: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: 99;
-  backdrop-filter: blur(2px);
-}
-
-/* Header logo image */
-.header-logo {
-  width: 200px;
-  height: auto;
-  max-height: 50px;
-  margin-right: 12px;
-  border-radius: 8px;
-  object-fit: contain;
-}
-
-.header-title {
+  background: var(--color-surface);
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -4px 20px var(--shadow-dark);
+  z-index: 100;
+  max-height: 90vh;
   display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+html.dark .panel {
+  background: var(--color-surface);
+  box-shadow: 0 -4px 20px var(--shadow-dark);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+/* Finalize button container */
+.finalize-button-container {
+  padding: 12px 16px;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+  display: flex;
   justify-content: center;
 }
 
-/* Minimalistic microphone icon */
-.mic-icon {
-  width: 80px;
-  height: 80px;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+.finalize-button-container .workout-btn {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 12px var(--shadow-light);
 }
 
-.record-btn:hover .mic-icon {
-  transform: scale(1.05);
+.finalize-button-container .workout-btn:hover {
+  background: var(--color-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px var(--shadow-light);
 }
 
-.record-btn.recording .mic-icon {
-  opacity: 0;
+html.dark .finalize-button-container .workout-btn {
+  box-shadow: 0 4px 12px var(--shadow-dark);
 }
 
-/* Pulse animation for recording state */
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0.5;
-  }
+html.dark .finalize-button-container .workout-btn:hover {
+  box-shadow: 0 6px 18px var(--shadow-dark);
 }
