@@ -1106,15 +1106,7 @@ html.dark .workout-table-wrapper {
   font-size: 14px;
 }
 
-/* Remove hover effects for workout panel table */
-.workout-table tbody tr:hover {
-  background-color: transparent !important;
-}
 
-/* Remove hover effects for history table since it's read-only */
-.history-table-wrapper .workout-table tbody tr:hover {
-  background-color: transparent;
-}
 
 html.dark .history-table-wrapper .workout-table tbody tr:hover {
   background-color: transparent;
@@ -1419,54 +1411,54 @@ html.dark .set-row:hover {
     border-radius: 8px;
     max-height: 70vh;
   }
-  
+
   .workout-table {
     font-size: 11px;
   }
-  
+
   .workout-table th,
   .workout-table td {
     padding: 6px 8px;
   }
-  
+
   .workout-table th {
     font-size: 12px;
   }
-  
+
   /* Adjust column widths for mobile */
   .workout-table th:nth-child(1),
   .workout-table td:nth-child(1) {
     width: 25%;
   }
-  
+
   .workout-table th:nth-child(2),
   .workout-table td:nth-child(2) {
     width: 25%;
     padding-left: 4px;
     padding-right: 4px;
   }
-  
+
   .workout-table th:nth-child(3),
   .workout-table td:nth-child(3) {
     width: 25%;
     padding-left: 4px;
     padding-right: 4px;
   }
-  
+
   .workout-table th:nth-child(4),
   .workout-table td:nth-child(4) {
     width: 25%;
   }
-  
+
   .reps-info,
   .weight-info {
     font-size: 13px;
   }
-  
+
   .exercise-name-header {
     font-size: 12px;
   }
-  
+
   .set-info-container {
     gap: 6px;
     flex-wrap: wrap;
@@ -1505,7 +1497,7 @@ html.dark .set-row:hover {
     justify-content: flex-end;
     width: 100% !important;
   }
-  
+
   /* Mobile review section fixes */
   .actions-cell .review-section {
     flex-direction: column;
@@ -1518,7 +1510,7 @@ html.dark .set-row:hover {
     margin-left: auto;
     margin-right: auto;
   }
-  
+
   .actions-cell .review-warning {
     font-size: 10px;
     line-height: 1.3;
@@ -1527,7 +1519,7 @@ html.dark .set-row:hover {
     max-width: 100%;
     padding: 0 4px;
   }
-  
+
   .actions-cell .approve-btn {
     background-color: #4CAF50 !important;
     color: white !important;
@@ -1542,44 +1534,44 @@ html.dark .set-row:hover {
     height: 18px !important;
     white-space: nowrap !important;
   }
-  
+
   .actions-cell .approve-btn:hover {
     background-color: #45a049 !important;
   }
-  
+
   .actions-cell .action-buttons {
     gap: 3px;
   }
-  
+
   /* Adjust header padding for mobile */
   .date-header {
     padding: 14px 16px !important;
     font-size: 14px;
   }
-  
+
   .time-header {
     padding: 16px 16px !important;
     font-size: 15px;
   }
-  
+
   .exercise-name-header {
     padding: 8px 8px !important;
     font-size: 11px;
   }
-  
+
   /* Improve spacing for history dropdowns */
   .history-table-wrapper .date-header-row {
     margin-bottom: 2px;
   }
-  
+
   .history-table-wrapper .time-header-row {
     margin-bottom: 1px;
   }
-  
+
   .history-table-wrapper .set-row {
     padding: 4px 0;
   }
-  
+
   .history-table-wrapper .reps-cell,
   .history-table-wrapper .weight-cell {
     padding: 6px 8px;
@@ -1588,39 +1580,40 @@ html.dark .set-row:hover {
 
 /* Medium screen adjustments */
 @media (min-width: 769px) and (max-width: 1024px) {
+
   .workout-table th:nth-child(1),
   .workout-table td:nth-child(1) {
     width: 25%;
   }
-  
+
   .workout-table th:nth-child(2),
   .workout-table td:nth-child(2) {
     width: 25%;
     padding-left: 6px;
     padding-right: 6px;
   }
-  
+
   .workout-table th:nth-child(3),
   .workout-table td:nth-child(3) {
     width: 25%;
     padding-left: 6px;
     padding-right: 6px;
   }
-  
+
   .workout-table th:nth-child(4),
   .workout-table td:nth-child(4) {
     width: 25%;
   }
-  
+
   .reps-info,
   .weight-info {
     font-size: 14px;
   }
-  
+
   .workout-table th {
     font-size: 13px;
   }
-  
+
   .exercise-name-header {
     font-size: 13px;
   }
@@ -1628,39 +1621,40 @@ html.dark .set-row:hover {
 
 /* Large screen adjustments */
 @media (min-width: 1025px) {
+
   .workout-table th:nth-child(1),
   .workout-table td:nth-child(1) {
     width: 30%;
   }
-  
+
   .workout-table th:nth-child(2),
   .workout-table td:nth-child(2) {
     width: 25%;
     padding-left: 12px;
     padding-right: 12px;
   }
-  
+
   .workout-table th:nth-child(3),
   .workout-table td:nth-child(3) {
     width: 25%;
     padding-left: 12px;
     padding-right: 12px;
   }
-  
+
   .workout-table th:nth-child(4),
   .workout-table td:nth-child(4) {
     width: 20%;
   }
-  
+
   .reps-info,
   .weight-info {
     font-size: 15px;
   }
-  
+
   .workout-table th {
     font-size: 15px;
   }
-  
+
   .exercise-name-header {
     font-size: 15px;
   }

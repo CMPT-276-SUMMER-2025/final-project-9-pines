@@ -269,14 +269,14 @@ export default function WorkoutPanel({
               </div>
             ) : (
               <>
-                <div className="workout-table-wrapper">
+                <div className="workout-table-wrapper" style={{hover: 'none'}}>
                   <table className="workout-table" role="grid" aria-label="Workout entries">
                     <tbody>
                       {Object.entries(organizedWorkoutData).map(([workoutType, entries]) => (
                         <React.Fragment key={workoutType}>
                           {/* Exercise Name Row with Reps/Weight Labels */}
-                          <tr className="exercise-header-row">
-                            <td className="exercise-name-header">
+                          <tr className="exercise-header-row" style={{hover: 'none'}}>
+                            <td className="exercise-name-header" style={{hover: 'none'}}>
                               {workoutType}
                             </td>
                             <td className="exercise-reps-header">
