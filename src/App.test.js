@@ -1,5 +1,6 @@
 import { callGeminiAPI } from './llm/gemini';
 import { translations } from './locales/translations';
+import { performanceReport } from './llm/gemini';
 
 // Mock the Gemini API module
 jest.mock('./llm/gemini', () => ({
@@ -20,7 +21,7 @@ describe('Gemini API Tests', () => {
     jest.clearAllMocks();
   });
 
-  //Workout data extraction
+  // Workout data extraction
   test('callGeminiAPI should be called with correct parameters', async () => {
     const mockResponse = { result: 'BenchPress,10,135lbs' };
     callGeminiAPI.mockResolvedValue(mockResponse);
@@ -32,7 +33,7 @@ describe('Gemini API Tests', () => {
     expect(result).toEqual(mockResponse);
   });
 
-  //Error handling and data validation
+  // Error handling and data validation
   test('callGeminiAPI should handle errors gracefully', async () => {
     const mockError = { error: 'API Error', status: 500 };
     callGeminiAPI.mockResolvedValue(mockError);
@@ -56,7 +57,7 @@ describe('Gemini API Tests', () => {
     expect(result.status).toBe(400);
   });
 
-  //Test for unrealistic workout data
+  // Test for unrealistic workout data
   test('callGeminiAPI should respond with NeedsReview for unrealistic workout', async () => {
     const mockResponse = { result: 'PushUps,2000000,Bodyweight,NeedsReview' };
     callGeminiAPI.mockResolvedValue(mockResponse);
@@ -67,9 +68,6 @@ describe('Gemini API Tests', () => {
     expect(callGeminiAPI).toHaveBeenCalledWith(testText);
     expect(result.result).toContain('NeedsReview');
   });
-
-
-
 });
 
 // Test language translation dictionary structure
@@ -110,30 +108,30 @@ describe('Translation Dictionary', () => {
       expect(translations.fr[key].length).toBeGreaterThan(0);
     });
   });
+});
 
 
-  // Test for workout summary to ensure it replies with a string
-  describe('Workout Summary', () => {
-    test('summarizeWorkoutCSV should return a string summary', async () => {
+// Test for workout summary to ensure it replies with a string
+describe('Workout Summary', () => {
+  test('summarizeWorkoutCSV should return a string summary', async () => {
     // Mock workout CSV data
       const csvData = `workoutType,Reps,Weight
 Bench Press,10,135
 Squat,8,185
 Deadlift,5,225`;
 
-      // If summarizeWorkoutCSV is not imported, skip the test
-      if (typeof summarizeWorkoutCSV !== 'function') {
+    // If summarizeWorkoutCSV is not imported, skip the test
+    if (typeof summarizeWorkoutCSV !== 'function') {
       // eslint-disable-next-line no-console
-        console.warn('summarizeWorkoutCSV not available, skipping test');
-        return;
-      }
+      console.warn('summarizeWorkoutCSV not available, skipping test');
+      return;
+    }
 
-      const summary = await summarizeWorkoutCSV(csvData);
+    const summary = await summarizeWorkoutCSV(csvData);
 
-      expect(typeof summary).toBe('string');
-      expect(summary.length).toBeGreaterThan(0);
-    });
+    expect(typeof summary).toBe('string');
+    expect(summary.length).toBeGreaterThan(0);
   });
-
 });
+
  
